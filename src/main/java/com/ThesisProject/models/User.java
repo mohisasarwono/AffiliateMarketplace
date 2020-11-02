@@ -21,10 +21,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+    private Integer type;
     private String name, password,email;
 
     public User() {
+    }
+
+    public User(Long id, Integer type, String name, String password, String email) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.password = password;
+        this.email = email;
     }
 
     public Long getId() {
@@ -58,5 +66,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 }
