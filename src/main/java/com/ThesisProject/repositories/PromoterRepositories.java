@@ -5,13 +5,12 @@
  */
 package com.ThesisProject.repositories;
 
-import com.ThesisProject.models.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.ThesisProject.models.Promoter;
 
 /**
  *
  * @author LENOVO
  */
-public interface UserRepositories extends JpaRepository<User, Long> {
-   User getByEmail(String email);
+public interface PromoterRepositories extends UserRepositories {
+    Promoter findByEmailAndPassword(String email, String password);
 }

@@ -5,13 +5,13 @@
  */
 package com.ThesisProject.repositories;
 
-import com.ThesisProject.models.User;
+import com.ThesisProject.models.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author LENOVO
  */
-public interface UserRepositories extends JpaRepository<User, Long> {
-   User getByEmail(String email);
+public interface StoreRepositories extends JpaRepository<Store, Long> {
+    Store findByEmailAndPassword(String email, String password);
 }

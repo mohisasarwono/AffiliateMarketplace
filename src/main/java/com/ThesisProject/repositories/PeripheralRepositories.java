@@ -5,13 +5,15 @@
  */
 package com.ThesisProject.repositories;
 
-import com.ThesisProject.models.User;
+import com.ThesisProject.models.Peripheral;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author LENOVO
  */
-public interface UserRepositories extends JpaRepository<User, Long> {
-   User getByEmail(String email);
+@Repository
+public interface PeripheralRepositories extends JpaRepository<Peripheral, Long>{
+    
 }

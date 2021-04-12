@@ -3,38 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ThesisProject.models;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+package com.ThesisProject.wrappers;
 
 /**
  *
  * @author LENOVO
  */
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class UserWrapper {
     private Long id;
-    private String name, address, phoneNumber, photoProfileUrl, email,password;
-    private Byte status;
+    private String name, address, phoneNumber, photoProfileUrl, email,storeDescription,password;
 
-    public User() {
+    public UserWrapper() {
     }
-    
-    public User(String name, String address, String phoneNumber, String photoProfileUrl,String email, String password,Byte status) {
+
+    public UserWrapper(Long id, String name, String address, String phoneNumber, String photoProfileUrl, String email, String storeDescription, String password) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.photoProfileUrl = photoProfileUrl;
-        this.status = status;
         this.email = email;
+        this.storeDescription = storeDescription;
         this.password = password;
     }
 
@@ -78,20 +67,20 @@ public abstract class User {
         this.photoProfileUrl = photoProfileUrl;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getStoreDescription() {
+        return storeDescription;
+    }
+
+    public void setStoreDescription(String storeDescription) {
+        this.storeDescription = storeDescription;
     }
 
     public String getPassword() {
@@ -101,6 +90,5 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
     
 }
