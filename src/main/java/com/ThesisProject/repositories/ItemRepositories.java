@@ -10,11 +10,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author LENOVO
  */
+@Repository
 public interface ItemRepositories extends JpaRepository<Item, Long> {
     
     @Query(value = "select * from mst_item where store_id = :storeId and status = 1 order by id",nativeQuery = true)

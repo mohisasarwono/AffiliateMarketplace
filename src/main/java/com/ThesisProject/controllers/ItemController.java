@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author LENOVO
  */
+@RestController
 @RequestMapping(path = "apis/item")
 public class ItemController {
     
@@ -34,7 +36,7 @@ public class ItemController {
     @Autowired
     StoreRepositories storeRepo;
     
-    @RequestMapping(name = "add",method = RequestMethod.POST)
+    @RequestMapping(value = "add",method = RequestMethod.POST)
     public void addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
             itemRepo.save(new Item(itemWrapper.getName(), itemWrapper.getDescription(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("dd/MM/yyyy").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId())));
@@ -44,7 +46,7 @@ public class ItemController {
     
     }
     
-    @RequestMapping(name="update", method = RequestMethod.PUT)
+    @RequestMapping(value="update", method = RequestMethod.PUT)
     public void updateItem(@RequestBody ItemWrapper itemWrapper){
     try{
         Item item = itemRepo.getOne(itemWrapper.getId());
@@ -64,24 +66,24 @@ public class ItemController {
     }
     }
     
-    @RequestMapping(name = "delete", method = RequestMethod.GET)
+    @RequestMapping(value = "delete", method=RequestMethod.GET,produces="application/json")
     public void deleteItem(@RequestParam("itemId") Long id){
         Item thisItem = itemRepo.getOne(id);
         thisItem.setStatus((byte)0);
         itemRepo.save(thisItem);
     }
     
-    @RequestMapping(name = "getByStore", method = RequestMethod.GET)
+    @RequestMapping(value = "getByStore", method=RequestMethod.GET,produces="application/json")
     public List<Item> getByStore(@RequestParam("storeId") Long storeId){
        return itemRepo.getByStoreAndStatus(storeId);
     }
     
-    @RequestMapping(name = "getAllItem", method = RequestMethod.GET)
+    @RequestMapping(value = "getAllItem", method=RequestMethod.GET,produces="application/json")
     public List<Item> getAllItem(){
        return itemRepo.getAll();
     }
     
-    @RequestMapping(name="getById", method=RequestMethod.GET)
+    @RequestMapping(value="getById", method=RequestMethod.GET,produces="application/json")
     public Item getById(@RequestParam(name = "id")Long id){
         return itemRepo.getOne(id);
     }

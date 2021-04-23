@@ -16,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author LENOVO
  */
+@RestController
+@RequestMapping(path = "apis/marketplace")
 public class MarketplaceController {
     @Autowired
     ItemRepositories itemRepo;
@@ -28,7 +31,7 @@ public class MarketplaceController {
     @Autowired
     StoreRepositories storeRepo;
     
-    @RequestMapping(name="getAllDataByItem", method=RequestMethod.GET)
+    @RequestMapping(value="getAllDataItem", method=RequestMethod.GET)
     public List<MarketPlaceForItemWrapper> getAllDataItem(@RequestParam(name = "limitData")Long limitData){
         List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
@@ -39,7 +42,7 @@ public class MarketplaceController {
         return thisOutput;
     }
     
-    @RequestMapping(name="getAllDataByStore", method=RequestMethod.GET)
+    @RequestMapping(value="getAllDataStore", method=RequestMethod.GET)
     public List<MarketPlaceForStoreWrapper> getAllDataStore(@RequestParam(name = "limitData")Long limitData){
         List<MarketPlaceForStoreWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);

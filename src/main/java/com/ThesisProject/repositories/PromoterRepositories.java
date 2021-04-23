@@ -6,11 +6,13 @@
 package com.ThesisProject.repositories;
 
 import com.ThesisProject.models.Promoter;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author LENOVO
  */
+@Repository
 public interface PromoterRepositories extends UserRepositories {
     Promoter findByEmailAndPassword(String email, String password);
 }
