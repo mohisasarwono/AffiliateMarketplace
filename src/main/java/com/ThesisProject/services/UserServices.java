@@ -6,8 +6,10 @@
 package com.ThesisProject.services;
 
 import com.ThesisProject.models.Promoter;
+import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.PromoterRepositories;
+import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.repositories.UserRepositories;
 import com.ThesisProject.wrappers.UserWrapper;
@@ -32,6 +34,8 @@ public class UserServices {
     @Autowired
     StoreRepositories storeRepo;
     
+    @Autowired
+    ReferralCodeRepositories referralCodeRepo;
     
     public int emailChecker(String email){
         if(userRepo.getByEmail(email)==null)
@@ -46,7 +50,9 @@ public class UserServices {
     
     public String saveData(UserWrapper userWrapper, Byte userType){
     if(userType==1){
-        promoRepo.save(new Promoter(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), userWrapper.getPassword(), (byte)1));
+        Promoter promoter =new Promoter(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), userWrapper.getPassword(), (byte)1); 
+        promoRepo.save(promoter);
+        referralCodeRepo.save(new ReferralCode(generateReferralCode(), (byte)1,promoter));
         return "Promoter";
     }
     storeRepo.save(new Store(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), userWrapper.getPassword(), (byte)1,userWrapper.getStoreDescription()));

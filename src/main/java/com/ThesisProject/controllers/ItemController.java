@@ -11,6 +11,7 @@ import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.wrappers.ItemWrapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,26 @@ public class ItemController {
     
     }
     
+    @RequestMapping(name="update", method = RequestMethod.PUT)
+    public void updateItem(@RequestBody ItemWrapper itemWrapper){
+    try{
+        Item item = itemRepo.getOne(itemWrapper.getId());
+        if(itemWrapper.getName()!=null)
+            item.setName(itemWrapper.getName());
+        if(itemWrapper.getCommissionPriceOrPercentage()!=null)
+            item.setCommissionPriceOrPercentage(itemWrapper.getCommissionPriceOrPercentage());
+        if(itemWrapper.getDescription()!=null)
+            item.setDescription(itemWrapper.getDescription());
+        if(itemWrapper.getExpiredDate()!=null)
+            item.setExpiredDate(new Date(Date.parse(itemWrapper.getExpiredDate())));
+        if(itemWrapper.getPrice()!=null)
+            item.setPrice(itemWrapper.getPrice());
+        itemRepo.save(item);
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+    }
+    
     @RequestMapping(name = "delete", method = RequestMethod.GET)
     public void deleteItem(@RequestParam("itemId") Long id){
         Item thisItem = itemRepo.getOne(id);
@@ -60,4 +81,8 @@ public class ItemController {
        return itemRepo.getAll();
     }
     
+    @RequestMapping(name="getById", method=RequestMethod.GET)
+    public Item getById(@RequestParam(name = "id")Long id){
+        return itemRepo.getOne(id);
+    }
 }

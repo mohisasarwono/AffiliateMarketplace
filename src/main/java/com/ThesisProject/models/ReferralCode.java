@@ -32,9 +32,8 @@ public class ReferralCode {
     public ReferralCode() {
     }
 
-    public ReferralCode(String referralBySystem, String referralByUser, Byte status, Promoter promoter) {
+    public ReferralCode(String referralBySystem, Byte status, Promoter promoter) {
         this.referralBySystem = referralBySystem;
-        this.referralByUser = referralByUser;
         this.status = status;
         this.promoter = promoter;
     }
