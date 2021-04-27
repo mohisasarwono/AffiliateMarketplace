@@ -80,15 +80,7 @@ public class Item {
     public void setPrice(Double price) {
         this.price = price;
     }
-
-    public Double getCommissionPrice() {
-        return commissionPriceOrPercentage;
-    }
-
-    public void setCommissionPrice(Double commissionPrice) {
-        this.commissionPriceOrPercentage = commissionPrice;
-    }
-
+    
     public Store getStore() {
         return store;
     }

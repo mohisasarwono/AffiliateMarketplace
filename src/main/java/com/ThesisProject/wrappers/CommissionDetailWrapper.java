@@ -3,35 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ThesisProject.models;
+package com.ThesisProject.wrappers;
 
-import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 /**
  *
  * @author LENOVO
  */
-@Entity
-@Table(name = "trx_commission_detail")
-public class CommissionDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Date transactionDate;
+public class CommissionDetailWrapper {
+    private Long id, commissionId, itemId;
+    private String transactionDate;
     private Double qty, price, commissionAmount;
-    
-    @ManyToOne
-    @JoinColumn(name = "commission_id",referencedColumnName = "id",updatable = true)
-    private Commission commission;
 
-    public CommissionDetail() {
+    public CommissionDetailWrapper() {
     }
 
     public Long getId() {
@@ -42,11 +26,19 @@ public class CommissionDetail {
         this.id = id;
     }
 
-    public Date getTransactionDate() {
+    public Long getCommissionId() {
+        return commissionId;
+    }
+
+    public void setCommissionId(Long commissionId) {
+        this.commissionId = commissionId;
+    }
+
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 
@@ -74,12 +66,11 @@ public class CommissionDetail {
         this.commissionAmount = commissionAmount;
     }
 
-    public Commission getCommission() {
-        return commission;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setCommission(Commission commission) {
-        this.commission = commission;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
-    
 }

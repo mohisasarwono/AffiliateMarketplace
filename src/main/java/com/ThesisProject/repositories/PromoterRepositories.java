@@ -6,6 +6,7 @@
 package com.ThesisProject.repositories;
 
 import com.ThesisProject.models.Promoter;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
  * @author LENOVO
  */
 @Repository
-public interface PromoterRepositories extends UserRepositories {
+public interface PromoterRepositories extends JpaRepository<Promoter, Long>{
     Promoter findByEmailAndPassword(String email, String password);
+    Promoter getByEmail(String email);
 }

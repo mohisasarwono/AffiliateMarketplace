@@ -11,8 +11,10 @@ import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.PromoterRepositories;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
-import com.ThesisProject.repositories.UserRepositories;
+//import com.ThesisProject.repositories.UserRepositories;
 import com.ThesisProject.wrappers.UserWrapper;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,9 +27,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServices {
-    @Autowired
-    UserRepositories userRepo;
-    
+//    @Autowired
+//    UserRepositories userRepo;
+//    
     @Autowired
     PromoterRepositories promoRepo;
     
@@ -38,9 +40,22 @@ public class UserServices {
     ReferralCodeRepositories referralCodeRepo;
     
     public int emailChecker(String email){
-        if(userRepo.getByEmail(email)==null)
+        if(promoRepo.getByEmail(email)==null)
             return 1;
         return 0;
+    }
+    
+    public String encryptPassword(String password){
+        String encryptedPass = "";
+        try{
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        encryptedPass= hash.toString();
+            System.out.println(encryptedPass);
+        }catch(Exception e){
+        e.printStackTrace();
+        }
+        return encryptedPass;
     }
     
     public boolean isEmailVaild(String email){
@@ -50,7 +65,7 @@ public class UserServices {
     
     public String saveData(UserWrapper userWrapper, Byte userType){
     if(userType==1){
-        Promoter promoter =new Promoter(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), userWrapper.getPassword(), (byte)1); 
+        Promoter promoter =new Promoter(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), encryptPassword(userWrapper.getPassword()), (byte)1); 
         promoRepo.save(promoter);
         referralCodeRepo.save(new ReferralCode(generateReferralCode(), (byte)1,promoter));
         return "Promoter";

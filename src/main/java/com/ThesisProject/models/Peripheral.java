@@ -29,6 +29,7 @@ public class Peripheral {
     private String peripheralLink;
     private Integer clickCounter;
     private Date duration;
+    private Byte status;
 
     public Peripheral() {
     }
@@ -39,6 +40,7 @@ public class Peripheral {
         this.referralCode = referralCode;
         this.item = item;
     }
+    
     
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "referral_id",referencedColumnName = "id")

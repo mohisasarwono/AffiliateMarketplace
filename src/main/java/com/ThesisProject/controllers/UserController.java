@@ -9,7 +9,7 @@ import com.ThesisProject.models.Promoter;
 import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.PromoterRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
-import com.ThesisProject.repositories.UserRepositories;
+//import com.ThesisProject.repositories.UserRepositories;
 import com.ThesisProject.services.UserServices;
 import com.ThesisProject.wrappers.UserWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "apis/user")
 public class UserController {
-    @Autowired
-    UserRepositories userRepo;
+//    @Autowired
+//    UserRepositories userRepo;
     
     @Autowired
     PromoterRepositories promoRepo;
@@ -39,30 +39,25 @@ public class UserController {
     @Autowired
     UserServices userServices;
     
+    private String message;
+    
     @RequestMapping(value = "register",method = RequestMethod.POST)
-    public void register(@RequestBody UserWrapper userWrapper, @RequestParam(name = "type",required = true,defaultValue = "1")Byte userType){
+    public String register(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-            userServices.saveData(userWrapper, userType);
+                userServices.saveData(userWrapper, (byte)1);
             System.out.println("Berhasil");
+            message="Hello, "+userWrapper.getName();
         }else{
             System.out.println("Gagal");
+            message="Error";
         }
+        return message;
     }
     
     @RequestMapping(value = "login",method = RequestMethod.GET)
-    public @ResponseBody Long login(@RequestParam(name = "email",required = true)String email,@RequestParam(name = "password",required = true)String passrword,@RequestParam(name="type",defaultValue = "1")Byte userType){
-        if(userType==1){
-            Promoter promoter = promoRepo.findByEmailAndPassword(email, passrword);
-            if(promoter!=null){
-                return promoter.getId();
-            }
-        }else{
-            Store store = storeRepo.findByEmailAndPassword(email, passrword);
-            if(store!=null){
-                return store.getId();
-            }
-        }
-        return (long)0;
+    public @ResponseBody Promoter login(@RequestParam(name = "email",required = true)String email,@RequestParam(name = "password",required = true)String passrword){
+            Promoter promoter = promoRepo.findByEmailAndPassword(email, userServices.encryptPassword(passrword));
+            return promoter;
     }
     
     @RequestMapping(value = "update",method = RequestMethod.POST)

@@ -32,7 +32,7 @@ public class MarketplaceController {
     StoreRepositories storeRepo;
     
     @RequestMapping(value="getAllDataItem", method=RequestMethod.GET)
-    public List<MarketPlaceForItemWrapper> getAllDataItem(@RequestParam(name = "limitData")Long limitData){
+    public List<MarketPlaceForItemWrapper> getAllDataItem(@RequestParam(name = "limitData", required = true )Long limitData){
         List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
         List<Object[]> thisData = itemRepo.getDataForMarketplace(storeIds);
@@ -43,7 +43,7 @@ public class MarketplaceController {
     }
     
     @RequestMapping(value="getAllDataStore", method=RequestMethod.GET)
-    public List<MarketPlaceForStoreWrapper> getAllDataStore(@RequestParam(name = "limitData")Long limitData){
+    public List<MarketPlaceForStoreWrapper> getAllDataStore(@RequestParam(name = "limitData",required = true)Long limitData){
         List<MarketPlaceForStoreWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
         List<MarketPlaceForItemWrapper> thisItem = getAllDataItem(limitData);
@@ -54,8 +54,10 @@ public class MarketplaceController {
             MarketPlaceForStoreWrapper temp = new MarketPlaceForStoreWrapper();
             temp.setId(Long.parseLong(obj[0].toString()));
             temp.setName(obj[1].toString());
+            if(obj[2]!=null)
             temp.setDesc(obj[2].toString());
             temp.setPhoneNumber(obj[3].toString());
+            if(obj[4]!=null)
             temp.setImageUrl(obj[4].toString());
             for(int i=start;i<thisItem.size();i++){
                 if(thisItem.get(i).getStoreId()==temp.getId()){

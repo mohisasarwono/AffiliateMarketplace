@@ -24,7 +24,8 @@ public class Commission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double totalCommissionAmount, totalTransaction;
+    private Double totalCommissionAmount;
+    private Integer totalTransaction;
     
     
     @ManyToOne
@@ -61,6 +62,14 @@ public class Commission {
 
     public void setPeripheral(Peripheral peripheral) {
         this.peripheral = peripheral;
+    }
+
+    public Integer getTotalTransaction() {
+        return totalTransaction;
+    }
+
+    public void setTotalTransaction(Integer totalTransaction) {
+        this.totalTransaction = totalTransaction;
     }
     
 }
