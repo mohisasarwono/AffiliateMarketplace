@@ -49,11 +49,6 @@ public class ReferralCodeController {
         referralCodeRepo.save(thisReferral);
     }
     
-    @RequestMapping(value = "getAllReferral", method = RequestMethod.GET)
-    public List<ReferralCode> getAllReferral(@RequestParam(name = "promoterId")Long promoterId,@RequestParam(name="status")Byte status){
-        return referralCodeRepo.getAllByPromoterAndStatus(promoterId, status);
-    }
-    
     public void saveData(ReferralCode thisReferral, String referralCode, Byte status){
         thisReferral.setReferralByUser(referralCode);
         thisReferral.setStatus(status);

@@ -11,6 +11,8 @@ import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +40,25 @@ public class PeripheralController {
     String message;
     
     @RequestMapping(value = "promote", method=RequestMethod.GET)
-    public void promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name = "status",required = true,defaultValue = "1")Byte status,@RequestParam(name ="itemId",required = true)Long itemId,@RequestParam(name="peripheralLink",required = true)String peripheralLink){
-        Item item =  itemRepo.getOne(itemId);
-        ReferralCode referralCode = referralCodeRepo.findByPromoter(promoterId);
-        Peripheral newPeripheral = new Peripheral(peripheralLink, 0, referralCode , item);
-    }
-    
-    public String generatePeriphalLink(){
-        return "";
+    public String promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name = "status",required = true,defaultValue = "1")Byte status,@RequestParam(name ="itemId",required = true)Long itemId,@RequestParam(name="peripheralLink",required = true)String peripheralLink){
+        try{
+        Peripheral thisPeripheral = peripheralRepo.getByPeripheralLink(peripheralLink);
+        if(thisPeripheral==null){
+            Item item =  itemRepo.getOne(itemId);
+            ReferralCode referralCode = referralCodeRepo.findByPromoter(promoterId);
+            thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item);
+            peripheralRepo.save(thisPeripheral);
+            message ="Success Promote this Item";
+        }else{
+            thisPeripheral.setStatus((byte)1);
+            peripheralRepo.save(thisPeripheral);
+            message ="Success Promote this Item";
+        }    
+        }catch(Exception e){
+            e.printStackTrace();
+            message = "Error";
+        }
+        return message;
     }
     
     @RequestMapping(value = "counter", method=RequestMethod.GET)
@@ -64,5 +77,19 @@ public class PeripheralController {
     @RequestMapping(value = "getAllByPromoter", method = RequestMethod.GET)
     public List<Peripheral> getAllPeripheralByPromoter(@RequestParam(name="promoterId",required = true)Long promoterId){
         return peripheralRepo.getAllByReferralCode(referralCodeRepo.findByPromoter(promoterId));
+    }
+    
+    @RequestMapping(value = "cancelPromote", method = RequestMethod.GET)
+    public String cancelPromote(@RequestParam(name="peripheralId",required = true)Long peripheralId){
+        try{
+        Peripheral thisPeripheral = peripheralRepo.getOne(peripheralId);
+        thisPeripheral.setStatus((byte)0);
+        peripheralRepo.save(thisPeripheral);
+        message ="Cancel promote";
+        }catch(Exception e){
+            e.printStackTrace();
+            message = "Error Occured";
+        }
+        return message;
     }
 }

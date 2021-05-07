@@ -26,13 +26,13 @@ public interface ItemRepositories extends JpaRepository<Item, Long> {
     List<Item> getAll();
     
     @Query(value = "select i.id as iId, i.name as iName, i.commission_price_or_percentage as iComPriOrPer, i.commission_status as iComStat, " +
-"	i.expired_date as iExpDate, i.store_id as iStoreId, count(cd.id) as totalTransc, i.description as iDesc " +
+"	i.expired_date as iExpDate, i.store_id as iStoreId, count(cd.id) as totalTransc, i.description as iDesc, coalesce(sum(p.click_counter),0) as totalView " +
 "from mst_item as i " +
 "left join mst_peripheral as p on p.item_id = i.id " +
 "left join trx_commission as c on c.peripheral_id = p.id " +
 "left join trx_commission_detail as cd on cd.commission_id = c.id " +
 "where i.store_id in (:storeIds) " +
-"group by iId order by i.store_id",nativeQuery=true)
+"group by iId, p.item_id order by i.store_id",nativeQuery=true)
     List<Object[]> getDataForMarketplace(@Param("storeIds")List<Long> storeIds);
     
 }

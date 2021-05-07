@@ -46,7 +46,7 @@ public class Peripheral {
     @JoinColumn(name = "referral_id",referencedColumnName = "id")
     private ReferralCode referralCode;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "item_id",referencedColumnName = "id")
     private Item item;
 
@@ -97,9 +97,13 @@ public class Peripheral {
     public void setDuration(Date duration) {
         this.duration = duration;
     }
-    
-    
-    
-    
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
     
 }

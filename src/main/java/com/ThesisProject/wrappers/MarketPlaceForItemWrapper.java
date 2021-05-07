@@ -13,14 +13,14 @@ public class MarketPlaceForItemWrapper{
     private Long id,storeId;
     private String name,desc, imageUrl;
     protected Double commision;
-    private Integer totalTranscation;
+    private Integer totalTranscation, totalView;
     private String durationDate;
     private Byte commissionStat;
 
     public MarketPlaceForItemWrapper() {
     }
 
-    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat) {
+    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat, Integer totalView) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -30,6 +30,7 @@ public class MarketPlaceForItemWrapper{
         this.durationDate = durationDate;
         this.storeId = storeId;
         this.commissionStat = commissionStat;
+        this.totalView = totalView;
     }
 
     public Double getCommision() {
@@ -103,8 +104,14 @@ public class MarketPlaceForItemWrapper{
     public void setCommissionStat(Byte commissionStat) {
         this.commissionStat = commissionStat;
     }
-    
-    
+
+    public Integer getTotalView() {
+        return totalView;
+    }
+
+    public void setTotalView(Integer totalView) {
+        this.totalView = totalView;
+    }
     
     
 }

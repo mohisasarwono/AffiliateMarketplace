@@ -6,8 +6,6 @@
 package com.ThesisProject.services;
 
 import com.ThesisProject.models.Promoter;
-import com.ThesisProject.models.ReferralCode;
-import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.PromoterRepositories;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
@@ -33,11 +31,6 @@ public class UserServices {
     @Autowired
     PromoterRepositories promoRepo;
     
-    @Autowired
-    StoreRepositories storeRepo;
-    
-    @Autowired
-    ReferralCodeRepositories referralCodeRepo;
     
     public int emailChecker(String email){
         if(promoRepo.getByEmail(email)==null)
@@ -49,7 +42,7 @@ public class UserServices {
         String encryptedPass = "";
         try{
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        byte[] hash = digest.digest(password.getBytes());
         encryptedPass= hash.toString();
             System.out.println(encryptedPass);
         }catch(Exception e){
@@ -63,16 +56,7 @@ public class UserServices {
         return emailMatcher.matches();
     }
     
-    public String saveData(UserWrapper userWrapper, Byte userType){
-    if(userType==1){
-        Promoter promoter =new Promoter(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), encryptPassword(userWrapper.getPassword()), (byte)1); 
-        promoRepo.save(promoter);
-        referralCodeRepo.save(new ReferralCode(generateReferralCode(), (byte)1,promoter));
-        return "Promoter";
-    }
-    storeRepo.save(new Store(userWrapper.getName(), userWrapper.getAddress(), userWrapper.getPhoneNumber(), userWrapper.getPhotoProfileUrl(), userWrapper.getEmail(), userWrapper.getPassword(), (byte)1,userWrapper.getStoreDescription()));
-    return "Store";
-    }
+    
     
     public String generateReferralCode(){
         int leftLimit = 48;

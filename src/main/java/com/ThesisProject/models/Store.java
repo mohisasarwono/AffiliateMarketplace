@@ -24,6 +24,7 @@ public class Store {
     private String name, address, phoneNumber, photoProfileUrl, email,password;
     private Byte status;
     private String storeDescription;
+    private Integer type;
 
     public Store() {
     }
@@ -110,6 +111,12 @@ public class Store {
     public void setStatus(Byte status) {
         this.status = status;
     }
-    
-    
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 }

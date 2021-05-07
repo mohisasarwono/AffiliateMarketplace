@@ -6,8 +6,10 @@
 package com.ThesisProject.controllers;
 
 import com.ThesisProject.models.Promoter;
+import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.PromoterRepositories;
+import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
 //import com.ThesisProject.repositories.UserRepositories;
 import com.ThesisProject.services.UserServices;
@@ -34,7 +36,7 @@ public class UserController {
     PromoterRepositories promoRepo;
     
     @Autowired
-    StoreRepositories storeRepo;
+    ReferralCodeRepositories referralCodeRepo;
     
     @Autowired
     UserServices userServices;
@@ -44,7 +46,7 @@ public class UserController {
     @RequestMapping(value = "register",method = RequestMethod.POST)
     public String register(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-                userServices.saveData(userWrapper, (byte)1);
+                saveData(userWrapper);
             System.out.println("Berhasil");
             message="Hello, "+userWrapper.getName();
         }else{
@@ -61,13 +63,36 @@ public class UserController {
     }
     
     @RequestMapping(value = "update",method = RequestMethod.POST)
-    public void update(@RequestBody UserWrapper userWrapper, @RequestParam(name = "type",required = true,defaultValue = "1")Byte userType){
+    public void update(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-            userServices.saveData(userWrapper, userType);
+            saveData(userWrapper);
             System.out.println("Berhasil");
         }else{
             System.out.println("Gagal");
         }
+    }
+    
+    public String saveData(UserWrapper userWrapper){
+        Promoter promoter =new Promoter(); 
+        if(userWrapper.getName()!=null)
+            promoter.setName(message);
+        if(userWrapper.getAddress()!=null)
+            promoter.setAddress(userWrapper.getAddress());
+        if(userWrapper.getPhoneNumber()!=null)
+            promoter.setPhoneNumber(userWrapper.getPhoneNumber());
+        if(userWrapper.getPassword()!=null)
+            promoter.setPassword(userWrapper.getPassword());
+        if(userWrapper.getEmail()!=null)
+            promoter.setEmail(userWrapper.getEmail());
+        if(userWrapper.getPhotoProfileUrl()!=null)
+            promoter.setPhotoProfileUrl(userWrapper.getPhotoProfileUrl());
+        if(userWrapper.getDoB()!=null)
+            promoter.setDoB(userWrapper.getDoB());
+        promoter.setStatus((byte)1);
+        promoter.setCommissionMoney((double)0);
+        promoRepo.save(promoter);
+        referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
+        return "Promoter";
     }
     
 }

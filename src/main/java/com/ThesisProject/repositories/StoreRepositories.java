@@ -26,4 +26,19 @@ public interface StoreRepositories extends JpaRepository<Store, Long> {
     @Query(value="select id, name,store_description, phone_number, photo_profile_url from mst_store where id in (:storeIds) and status = 1 order by id", nativeQuery = true)
     List<Object[]> getAllDataForMarketplace(@Param("storeIds") List<Long> storeIds);
     
+    @Query(value="select id from mst_store where name ilike(concat('%',:name,'%')) and status = 1 order by id ", nativeQuery = true)
+    List<Long> getStoreByName(@Param("name")String name);
+    
+    @Query(value="select id from mst_store  where type = :type and status = 1", nativeQuery = true )
+    List<Long> getStoreByType(@Param("type")Integer type);
+    
+    @Query(value="select s.id from mst_store as s " +
+    "join mst_item as i on s.id = i.store_id " +
+    "join mst_peripheral as p on p.item_id = i.id " +
+    "join trx_commission as c on c.peripheral_id = p.id " +
+    "where c.total_transaction >= :totalTranscation and s.status = 1 order by s.id ", nativeQuery = true)
+    List<Long> getStoreByTotalTransaction(@Param("totalTranscation")Integer totalTransaction);
+    
+    
+    
 }

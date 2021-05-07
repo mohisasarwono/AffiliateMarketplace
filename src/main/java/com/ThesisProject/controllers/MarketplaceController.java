@@ -12,6 +12,9 @@ import com.ThesisProject.wrappers.MarketPlaceForItemWrapper;
 import com.ThesisProject.wrappers.MarketPlaceForStoreWrapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,20 +36,74 @@ public class MarketplaceController {
     
     @RequestMapping(value="getAllDataItem", method=RequestMethod.GET)
     public List<MarketPlaceForItemWrapper> getAllDataItem(@RequestParam(name = "limitData", required = true )Long limitData){
-        List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
-        List<Object[]> thisData = itemRepo.getDataForMarketplace(storeIds);
-        for(Object[] obj: thisData){
-            thisOutput.add(new MarketPlaceForItemWrapper(Long.parseLong(obj[0].toString()), obj[1].toString(), obj[7].toString(), "imageUrl", Double.parseDouble(obj[2].toString()),Integer.parseInt(obj[6].toString()), obj[4].toString() , Long.parseLong(obj[5].toString()),Byte.parseByte(obj[3].toString())));
-        }
-        return thisOutput;
+        return initDataItem(storeIds);
     }
     
     @RequestMapping(value="getAllDataStore", method=RequestMethod.GET)
     public List<MarketPlaceForStoreWrapper> getAllDataStore(@RequestParam(name = "limitData",required = true)Long limitData){
-        List<MarketPlaceForStoreWrapper> thisOutput = new ArrayList();
         List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
         List<MarketPlaceForItemWrapper> thisItem = getAllDataItem(limitData);
+        return initDataStore(storeIds, thisItem);
+    }
+    
+    @RequestMapping(value="advanceSearch", method=RequestMethod.GET)
+    public List<MarketPlaceForStoreWrapper> advanceSearch(@RequestParam(name = "storeName",required = false,defaultValue = "null")String sName,@RequestParam(name = "totalTransaction",required = false, defaultValue = "0")Integer totalTransac, @RequestParam(name = "type",required = false, defaultValue = "0")Integer type){
+        List<Long> storeIds = new ArrayList();
+        int param=0;
+        if(!sName.equals("null")){
+            storeIds.addAll(storeRepo.getStoreByName(sName));
+            param++;
+        }
+        if(totalTransac>0){
+            storeIds.addAll(storeRepo.getStoreByTotalTransaction(totalTransac));
+            param++;
+        }
+        if(type>0){
+            storeIds.addAll(storeRepo.getStoreByType(type));
+            param++;
+        }
+        if(storeIds==null)
+            return getAllDataStore((long)100);
+        
+        if(param>1){
+            List<Long> resultDuplicate = findDuplicate(storeIds,param);
+            for(Long dat : resultDuplicate){
+                System.out.println("id Dup : "+ dat);
+               }
+            return initDataStore(resultDuplicate,initDataItem(resultDuplicate));
+        }
+        
+        return initDataStore(storeIds,initDataItem(storeIds));
+        
+    }
+    
+     public List<Long> findDuplicate(List<Long> thisStoreIds, Integer param)
+    {
+        if(param==2){
+        return thisStoreIds.stream().collect(
+                        Collectors.groupingBy(
+                                Function.identity(),
+                    Collectors.counting()))
+            .entrySet()
+            .stream()
+            .filter(m -> m.getValue() > 1)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());}
+        
+        return thisStoreIds.stream().collect(
+                        Collectors.groupingBy(
+                                Function.identity(),
+                    Collectors.counting()))
+            .entrySet()
+            .stream()
+            .filter(m -> m.getValue() > 2)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+    }
+    
+     public List<MarketPlaceForStoreWrapper> initDataStore(List<Long> storeIds, List<MarketPlaceForItemWrapper> thisItem){
+        List<MarketPlaceForStoreWrapper> thisOutput = new ArrayList();
         int start = 0;
         List<Object[]> thisData = storeRepo.getAllDataForMarketplace(storeIds);
         for(Object[] obj: thisData){
@@ -70,7 +127,14 @@ public class MarketplaceController {
             thisOutput.add(temp);
         }
         return thisOutput;
-    }
+     }
     
-    
+      public List<MarketPlaceForItemWrapper> initDataItem(List<Long> storeIds){
+        List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
+        List<Object[]> thisData = itemRepo.getDataForMarketplace(storeIds);
+        for(Object[] obj: thisData){
+            thisOutput.add(new MarketPlaceForItemWrapper(Long.parseLong(obj[0].toString()), obj[1].toString(), obj[7].toString(), "imageUrl", Double.parseDouble(obj[2].toString()),Integer.parseInt(obj[6].toString()), obj[4].toString() , Long.parseLong(obj[5].toString()),Byte.parseByte(obj[3].toString()),Integer.parseInt(obj[8].toString())));
+        }
+        return thisOutput;
+      }
 }
