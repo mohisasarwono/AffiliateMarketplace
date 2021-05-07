@@ -11,16 +11,16 @@ package com.ThesisProject.wrappers;
  */
 public class CommissionSummaryWrapper {
     private Long storeId;
-    private String storeName;
+    private String storeOrPromoterName;
     private Integer clickCounter;
     private Double totalCommissionAmount, totalTransaction;
 
     public CommissionSummaryWrapper() {
     }
 
-    public CommissionSummaryWrapper(Long storeId, String storeName, Integer clickCounter, Double totalCommissionAmount, Double totalTransaction) {
+    public CommissionSummaryWrapper(Long storeId, String storeOrPromoterName, Integer clickCounter, Double totalCommissionAmount, Double totalTransaction) {
         this.storeId = storeId;
-        this.storeName = storeName;
+        this.storeOrPromoterName = storeOrPromoterName;
         this.clickCounter = clickCounter;
         this.totalCommissionAmount = totalCommissionAmount;
         this.totalTransaction = totalTransaction;
@@ -34,12 +34,12 @@ public class CommissionSummaryWrapper {
         this.storeId = storeId;
     }
 
-    public String getStoreName() {
-        return storeName;
+    public String getStoreOrPromoterName() {
+        return storeOrPromoterName;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setStoreOrPromoterName(String storeOrPromoterName) {
+        this.storeOrPromoterName = storeOrPromoterName;
     }
 
     public Integer getClickCounter() {

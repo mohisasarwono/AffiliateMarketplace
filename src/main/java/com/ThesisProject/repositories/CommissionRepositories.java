@@ -30,4 +30,14 @@ public interface CommissionRepositories extends JpaRepository<Commission, Long> 
         "where pr.id = :promoterId " +
         "group by s.id", nativeQuery = true)
     List<Object[]>getDataForSummary(@Param("promoterId")Long promoterId);
+    
+    @Query(value="select s.id as storeId, pr.name as promoterName, sum(p.click_counter) as clickCounter, sum(c.total_commission_amount) as totCommAm, sum(c.total_transaction) as totTransac from mst_peripheral as p \n" +
+"        join mst_item as i on p.item_id = i.id " +
+"        join mst_store as s on s.id = i.store_id " +
+"        join trx_commission as c on c.peripheral_id = p.id " +
+"        join mst_referral_code as r on r.id = p.referral_id " +
+"        join mst_promoter as pr on pr.id = r.promoter_id " +
+"        where s.id = :storeId " +
+"        group by s.id, pr.id", nativeQuery = true)
+    List<Object[]>getDataSummaryForStore(@Param("storeId")Long storeId);
 }

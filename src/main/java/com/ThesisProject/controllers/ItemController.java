@@ -39,7 +39,10 @@ public class ItemController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public void addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
-            itemRepo.save(new Item(itemWrapper.getName(), itemWrapper.getDescription(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("dd/MM/yyyy").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId())));
+            Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("dd/MM/yyyy").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
+            if(itemWrapper.getDescription()!=null)
+                item.setDescription(itemWrapper.getDescription());
+            itemRepo.save(item);
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }

@@ -44,9 +44,8 @@ public class Item {
         this.store = store;
     }
 
-    public Item(String name, String description, Double price, Double commissionPriceOrPercentage, Byte status, Byte commissionStatus, Date expiredDate, Store store) {
+    public Item(String name,Double price, Double commissionPriceOrPercentage, Byte status, Byte commissionStatus, Date expiredDate, Store store) {
         this.name = name;
-        this.description = description;
         this.price = price;
         this.commissionPriceOrPercentage = commissionPriceOrPercentage;
         this.status = status;

@@ -5,27 +5,21 @@
  */
 package com.ThesisProject.wrappers;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author LENOVO
  */
-public class UserWrapper {
+public class StoreWrapper {
     private Long id;
     private String name, address, phoneNumber, photoProfileUrl, email,password;
-    private Date DoB;
-    public UserWrapper() {
-    }
+    private Byte status;
+    private String storeDescription;
+    private Integer type;
+    private List<ItemWrapper> items;
 
-    public UserWrapper(Long id, String name, String address, String phoneNumber, String photoProfileUrl, String email, String storeDescription, String password) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.photoProfileUrl = photoProfileUrl;
-        this.email = email;
-        this.password = password;
+    public StoreWrapper() {
     }
 
     public Long getId() {
@@ -84,11 +78,37 @@ public class UserWrapper {
         this.password = password;
     }
 
-    public Date getDoB() {
-        return DoB;
+    public Byte getStatus() {
+        return status;
     }
 
-    public void setDoB(Date DoB) {
-        this.DoB = DoB;
+    public void setStatus(Byte status) {
+        this.status = status;
     }
+
+    public String getStoreDescription() {
+        return storeDescription;
+    }
+
+    public void setStoreDescription(String storeDescription) {
+        this.storeDescription = storeDescription;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public List<ItemWrapper> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemWrapper> items) {
+        this.items = items;
+    }
+    
+    
 }

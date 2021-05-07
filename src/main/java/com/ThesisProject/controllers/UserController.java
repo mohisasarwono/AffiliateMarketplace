@@ -89,7 +89,8 @@ public class UserController {
         if(userWrapper.getDoB()!=null)
             promoter.setDoB(userWrapper.getDoB());
         promoter.setStatus((byte)1);
-        promoter.setCommissionMoney((double)0);
+        if(promoter.getCommissionMoney()==null)
+            promoter.setCommissionMoney((double)0);
         promoRepo.save(promoter);
         referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
         return "Promoter";
