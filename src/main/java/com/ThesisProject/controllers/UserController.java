@@ -75,7 +75,7 @@ public class UserController {
     public String saveData(UserWrapper userWrapper){
         Promoter promoter =new Promoter(); 
         if(userWrapper.getName()!=null)
-            promoter.setName(message);
+            promoter.setName(userWrapper.getName());
         if(userWrapper.getAddress()!=null)
             promoter.setAddress(userWrapper.getAddress());
         if(userWrapper.getPhoneNumber()!=null)

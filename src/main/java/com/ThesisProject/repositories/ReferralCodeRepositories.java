@@ -23,4 +23,7 @@ public interface ReferralCodeRepositories extends JpaRepository<ReferralCode, Lo
     
     @Query(value="select * from mst_referral_code where promoter_id = :promoter and status = :status order by id",nativeQuery = true)
     List<ReferralCode> getAllByPromoterAndStatus(@Param("promoter")Long promoter, @Param("status")Byte status);
+    
+    @Query(value="select * from mst_referral_code where referral_by_system =:referralCode and referral_by_user=:referralCode",nativeQuery = true)
+    List<ReferralCode> checkReferralCode(@Param("referralCode") String referralCode);
 }

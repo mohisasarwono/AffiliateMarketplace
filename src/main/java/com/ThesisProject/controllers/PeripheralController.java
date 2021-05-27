@@ -40,12 +40,13 @@ public class PeripheralController {
     String message;
     
     @RequestMapping(value = "promote", method=RequestMethod.GET)
-    public String promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name = "status",required = true,defaultValue = "1")Byte status,@RequestParam(name ="itemId",required = true)Long itemId,@RequestParam(name="peripheralLink",required = true)String peripheralLink){
+    public String promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name ="itemId",required = true)Long itemId){
         try{
-        Peripheral thisPeripheral = peripheralRepo.getByPeripheralLink(peripheralLink);
+        Peripheral thisPeripheral = peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
         if(thisPeripheral==null){
             Item item =  itemRepo.getOne(itemId);
             ReferralCode referralCode = referralCodeRepo.findByPromoter(promoterId);
+            String peripheralLink = "mimiAffiliate.com/"+item.getStore().getId()+"/"+item.getId()+"/"+referralCode.getId();
             thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item);
             peripheralRepo.save(thisPeripheral);
             message ="Success Promote this Item";
@@ -77,6 +78,11 @@ public class PeripheralController {
     @RequestMapping(value = "getAllByPromoter", method = RequestMethod.GET)
     public List<Peripheral> getAllPeripheralByPromoter(@RequestParam(name="promoterId",required = true)Long promoterId){
         return peripheralRepo.getAllByReferralCode(referralCodeRepo.findByPromoter(promoterId));
+    }
+    
+    @RequestMapping(value = "getByPromoterAndItem", method = RequestMethod.GET)
+    public Peripheral getByPromoterAndItem(@RequestParam(name="promoterId",required = true)Long promoterId,@RequestParam(name="itemId",required = true)Long itemId){
+        return peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
     }
     
     @RequestMapping(value = "cancelPromote", method = RequestMethod.GET)

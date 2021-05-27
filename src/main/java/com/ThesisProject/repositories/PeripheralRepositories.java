@@ -21,6 +21,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PeripheralRepositories extends JpaRepository<Peripheral, Long>{
     Peripheral getByPeripheralLink(String peripheralLink);
+    @Query(value ="select * from mst_peripheral where item_id =:itemId and referral_id =:referralId and status = 1", nativeQuery = true)
+    Peripheral getByItemAndReferral(@Param("itemId")Long itemId, @Param("referralId")Long referralId);
     
     List<Peripheral> getAllByReferralCode(ReferralCode referralCode); 
 }

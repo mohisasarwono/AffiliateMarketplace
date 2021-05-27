@@ -13,9 +13,14 @@ import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.wrappers.UserWrapper;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,17 +43,23 @@ public class UserServices {
         return 0;
     }
     
-//    public String encryptPassword(String password){
-//        String encryptedPass = "";
-//        try{
-//            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            encryptedPass = passwordEncoder.encode(password);
-//            System.out.println(encryptedPass);
-//        }catch(Exception e){
-//        e.printStackTrace();
-//        }
-//        return encryptedPass;
-//    }
+    public static String encryptPassword(String password){
+        String encryptedPass = "";
+        try{
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            encryptedPass = Base64.getEncoder().encodeToString(hash);
+            System.out.println(hash);
+            System.out.println(encryptedPass);
+        }catch(Exception e){
+        e.printStackTrace();
+        }
+        return encryptedPass;
+    }
     
     public boolean isEmailVaild(String email){
         Matcher emailMatcher = Pattern.compile( "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", Pattern.CASE_INSENSITIVE).matcher(email);

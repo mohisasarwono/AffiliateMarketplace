@@ -27,19 +27,32 @@ public class ReferralCodeController {
     
     @Autowired
     UserServices userServices;
-    
+    private String message;
     private Byte BY_SYSTEM =1;
     private Byte BY_USER =2;
     
     @RequestMapping(value = "updateReferral", method = RequestMethod.GET)
-    public void updateReferral(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name = "status",required = true,defaultValue = "1")Byte status){
+    public String updateReferral(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name = "status",required = true,defaultValue = "1")Byte status){
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
         if(status ==2){
+            if(referralCodeRepo.checkReferralCode(referralCode)==null)
             saveData(thisReferral, referralCode, BY_USER);
+            else 
+                message ="Referral Code has been used by other";
         }else{
-            saveData(thisReferral, userServices.generateReferralCode(), BY_SYSTEM);
+            if(referralCodeRepo.checkReferralCode(referralCode)==null)
+            saveData(thisReferral, referralCode, BY_SYSTEM);
+            else 
+                message ="Referral Code has been used by other";
         }
         referralCodeRepo.save(thisReferral);
+        message ="Success Updating Referral Code";
+        return message;
+    }
+    
+    @RequestMapping(value = "getGeneratedBySystem", method = RequestMethod.GET)
+    public String getGenerateBySystem(){
+        return userServices.generateReferralCode();
     }
    
     @RequestMapping(value = "hide", method = RequestMethod.GET)
@@ -47,6 +60,11 @@ public class ReferralCodeController {
         ReferralCode thisReferral = referralCodeRepo.getOne(id);
         thisReferral.setStatus((byte)0);
         referralCodeRepo.save(thisReferral);
+    }
+    
+    @RequestMapping(value="getByPromoter", method = RequestMethod.GET)
+    public ReferralCode getByPromoter(@RequestParam(name = "promoterId", required = true)Long promoterId){
+        return referralCodeRepo.findByPromoter(promoterId);
     }
     
     public void saveData(ReferralCode thisReferral, String referralCode, Byte status){

@@ -9,9 +9,11 @@ import com.ThesisProject.models.Commission;
 import com.ThesisProject.models.CommissionDetail;
 import com.ThesisProject.models.Item;
 import com.ThesisProject.models.Peripheral;
+import com.ThesisProject.models.Promoter;
 import com.ThesisProject.repositories.CommissionRepositories;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
+import com.ThesisProject.repositories.PromoterRepositories;
 import com.ThesisProject.wrappers.CommissionDetailWrapper;
 import com.ThesisProject.wrappers.CommissionSummaryWrapper;
 import com.ThesisProject.wrappers.CommissionWrapper;
@@ -40,6 +42,9 @@ public class CommissionController {
     @Autowired
     ItemRepositories itemRepo; 
     
+    @Autowired
+    PromoterRepositories promoterRepo;
+    
     String message;
     
     @RequestMapping(value="add",method = RequestMethod.POST)
@@ -60,7 +65,7 @@ public class CommissionController {
             CommissionDetail newCommissionDetail = new CommissionDetail();
             newCommissionDetail.setPrice(thisCommDet.getPrice());
             newCommissionDetail.setQty(thisCommDet.getQty());
-            newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId()));
+            newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId(),peripheral.getId()));
             newCommissionDetail.setCommission(commission);
             totalCommissionAmount += newCommissionDetail.getCommissionAmount();
         }
@@ -75,7 +80,7 @@ public class CommissionController {
         return message;
     }
     
-    public Double calculateCommissionAmount(Double price, Double qty, Long itemId){
+    public Double calculateCommissionAmount(Double price, Double qty, Long itemId, Long peripheralId){
         Double commissionAmount = 0.0;
         Item thisItem = itemRepo.getOne(itemId);
         if(thisItem.getCommissionStatus()==1){
@@ -83,6 +88,9 @@ public class CommissionController {
         }else{
             commissionAmount = thisItem.getCommissionPriceOrPercentage()*price;
         }
+        Promoter thisPromoter = promoterRepo.findByPeripheral(peripheralId);
+        thisPromoter.setCommissionMoney(thisPromoter.getCommissionMoney()+commissionAmount);
+        promoterRepo.save(thisPromoter);
         return commissionAmount;
     }
     
@@ -98,4 +106,23 @@ public class CommissionController {
             thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString())));
         }
         return thisOutput;}
+    
+    @RequestMapping(value="getPromoterBalance",method = RequestMethod.GET)
+    public Double getPromoterBalance(@RequestParam(name = "promoterId",required = true)Long promoterId){
+        return promoterRepo.getOne(promoterId).getCommissionMoney();
+    }
+    
+    @RequestMapping(value="drawMoney",method = RequestMethod.GET)
+    public String drawMoney(@RequestParam(name = "promoterId",required = true)Long promoterId,@RequestParam(name = "balance",required = true)Double balance){
+        Double promoterBalance = getPromoterBalance(promoterId);
+        if(promoterBalance>balance){
+            Promoter promoter = promoterRepo.getOne(promoterId);
+            promoter.setCommissionMoney(promoter.getCommissionMoney()-promoterBalance);
+            promoterRepo.save(promoter);
+            message="Success Draw Your Money";
+        }else{
+            message="Error : Your input value is greater than your balance";
+        }
+        return message;
+    }
 }
