@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class UserWrapper {
     private Long id;
-    private String name, address, phoneNumber, photoProfileUrl, email,password;
+    private String name, address, phoneNumber, photoProfileUrl, email,password, gender;
     private Date DoB;
     public UserWrapper() {
     }
@@ -90,5 +90,13 @@ public class UserWrapper {
 
     public void setDoB(Date DoB) {
         this.DoB = DoB;
+    }
+
+    public String  getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

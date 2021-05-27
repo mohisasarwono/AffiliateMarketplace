@@ -58,7 +58,7 @@ public class UserController {
     
     @RequestMapping(value = "login",method = RequestMethod.GET)
     public @ResponseBody Promoter login(@RequestParam(name = "email",required = true)String email,@RequestParam(name = "password",required = true)String passrword){
-            Promoter promoter = promoRepo.findByEmailAndPassword(email, userServices.encryptPassword(passrword));
+            Promoter promoter = promoRepo.findByEmailAndPassword(email, passrword);
             return promoter;
     }
     
@@ -83,7 +83,7 @@ public class UserController {
         if(userWrapper.getPassword()!=null)
             promoter.setPassword(userWrapper.getPassword());
         if(userWrapper.getEmail()!=null)
-            promoter.setEmail(userWrapper.getEmail());
+            promoter.setEmail( userWrapper.getEmail());
         if(userWrapper.getPhotoProfileUrl()!=null)
             promoter.setPhotoProfileUrl(userWrapper.getPhotoProfileUrl());
         if(userWrapper.getDoB()!=null)
@@ -91,6 +91,8 @@ public class UserController {
         promoter.setStatus((byte)1);
         if(promoter.getCommissionMoney()==null)
             promoter.setCommissionMoney((double)0);
+        if(userWrapper.getGender()!=null)
+            promoter.setGender(userWrapper.getGender());
         promoRepo.save(promoter);
         referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
         return "Promoter";

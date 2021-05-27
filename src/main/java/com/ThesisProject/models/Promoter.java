@@ -25,7 +25,7 @@ public class Promoter{
     private Long id;
     
     private Date DoB;
-    private String name, address, phoneNumber, photoProfileUrl, email;
+    private String name, address, phoneNumber, photoProfileUrl, email, gender;
     @JsonIgnore
     private String password;
     private Byte status;
@@ -34,7 +34,7 @@ public class Promoter{
     public Promoter() {
     }
 
-    public Promoter(String name, String address, String phoneNumber, String photoProfileUrl, String email, String password, Byte status) {
+    public Promoter(String name, String address, String phoneNumber, String photoProfileUrl, String email, String password, Byte status, String gender) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -42,6 +42,7 @@ public class Promoter{
         this.email = email;
         this.password = password;
         this.status = status;
+        this.gender = gender;
     }
 
     
@@ -123,5 +124,13 @@ public class Promoter{
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

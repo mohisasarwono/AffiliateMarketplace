@@ -57,6 +57,11 @@ public class StoreController {
         return message;
     }
     
+    @RequestMapping(value ="getById", method = RequestMethod.GET)
+    public @ResponseBody Store getById(@RequestParam(name = "id", required = true) Long id){
+       return storeRepo.getOne(id);
+    }
+    
     
     public String initData(StoreWrapper storeWrapper, Store store){
         try{

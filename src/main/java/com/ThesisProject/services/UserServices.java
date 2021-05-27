@@ -38,18 +38,17 @@ public class UserServices {
         return 0;
     }
     
-    public String encryptPassword(String password){
-        String encryptedPass = "";
-        try{
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(password.getBytes());
-        encryptedPass= hash.toString();
-            System.out.println(encryptedPass);
-        }catch(Exception e){
-        e.printStackTrace();
-        }
-        return encryptedPass;
-    }
+//    public String encryptPassword(String password){
+//        String encryptedPass = "";
+//        try{
+//            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//            encryptedPass = passwordEncoder.encode(password);
+//            System.out.println(encryptedPass);
+//        }catch(Exception e){
+//        e.printStackTrace();
+//        }
+//        return encryptedPass;
+//    }
     
     public boolean isEmailVaild(String email){
         Matcher emailMatcher = Pattern.compile( "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", Pattern.CASE_INSENSITIVE).matcher(email);
