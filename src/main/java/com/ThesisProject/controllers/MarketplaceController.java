@@ -48,56 +48,56 @@ public class MarketplaceController {
     }
     
     @RequestMapping(value="advanceSearch", method=RequestMethod.GET)
-    public List<MarketPlaceForStoreWrapper> advanceSearch(@RequestParam(name = "storeName",required = false,defaultValue = "null")String sName,@RequestParam(name = "totalTransaction",required = false, defaultValue = "0")Integer totalTransac, @RequestParam(name = "type",required = false, defaultValue = "0")Integer type){
-        List<Long> storeIds = new ArrayList();
+    public List<MarketPlaceForItemWrapper> advanceSearch(@RequestParam(name = "storeName",required = false,defaultValue = "null")String storeName,@RequestParam(name = "totalTransaction",required = false, defaultValue = "0")Integer totalTransac, 
+            @RequestParam(name = "type",required = false, defaultValue = "0")Integer type, @RequestParam(name="itemName",required = false,defaultValue = "null")String itemName,
+            @RequestParam(name = "commissionRange",required = false, defaultValue = "0.0")Double commissionRange,@RequestParam(name = "commissionStatus",required = false, defaultValue = "0")Byte commissionStatus){
+        List<Long> itemIds = new ArrayList();
         int param=0;
-        if(!sName.equals("null")){
-            storeIds.addAll(storeRepo.getStoreByName(sName));
+        if(!storeName.equals("null")){
+            itemIds.addAll(storeRepo.getItemByNStoreName(storeName));
             param++;
         }
         if(totalTransac>0){
-            storeIds.addAll(storeRepo.getStoreByTotalTransaction(totalTransac));
+            itemIds.addAll(storeRepo.getItemByTotalTransaction(totalTransac));
             param++;
         }
         if(type>0){
-            storeIds.addAll(storeRepo.getStoreByType(type));
+            itemIds.addAll(storeRepo.getItemByType(type));
             param++;
         }
-        if(storeIds==null)
-            return getAllDataStore((long)100);
+        if(!itemName.equals("null")){   
+            itemIds.addAll(storeRepo.getItemByItemName(itemName));
+            param++;
+        }
+        if(commissionRange > 0.0 && !commissionStatus.toString().equals("0")){
+            itemIds.addAll(storeRepo.getItemByCommissionRange(commissionRange, commissionStatus));
+            param++;
+        }
+        
+        if(itemIds==null)
+            return getAllDataItem((long)100);
         
         if(param>1){
-            List<Long> resultDuplicate = findDuplicate(storeIds,param);
+            List<Long> resultDuplicate = findDuplicate(itemIds,param);
             for(Long dat : resultDuplicate){
                 System.out.println("id Dup : "+ dat);
                }
-            return initDataStore(resultDuplicate,initDataItem(resultDuplicate));
+            return initDataItem(resultDuplicate);
         }
         
-        return initDataStore(storeIds,initDataItem(storeIds));
+        return initDataItem(itemIds);
         
     }
     
-     public List<Long> findDuplicate(List<Long> thisStoreIds, Integer param)
+     public List<Long> findDuplicate(List<Long> thisItemIds, Integer param)
     {
-        if(param==2){
-        return thisStoreIds.stream().collect(
+        return thisItemIds.stream().collect(
                         Collectors.groupingBy(
                                 Function.identity(),
                     Collectors.counting()))
             .entrySet()
             .stream()
-            .filter(m -> m.getValue() > 1)
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());}
-        
-        return thisStoreIds.stream().collect(
-                        Collectors.groupingBy(
-                                Function.identity(),
-                    Collectors.counting()))
-            .entrySet()
-            .stream()
-            .filter(m -> m.getValue() > 2)
+            .filter(m -> m.getValue() > (param-1))
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
     }
@@ -129,9 +129,9 @@ public class MarketplaceController {
         return thisOutput;
      }
     
-      public List<MarketPlaceForItemWrapper> initDataItem(List<Long> storeIds){
+      public List<MarketPlaceForItemWrapper> initDataItem(List<Long> itemIds){
         List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
-        List<Object[]> thisData = itemRepo.getDataForMarketplace(storeIds);
+        List<Object[]> thisData = itemRepo.getDataForMarketplace(itemIds);
         for(Object[] obj: thisData){
             thisOutput.add(new MarketPlaceForItemWrapper(Long.parseLong(obj[0].toString()), obj[1].toString(), obj[7].toString(), "imageUrl", Double.parseDouble(obj[2].toString()),Integer.parseInt(obj[6].toString()), obj[4].toString() , Long.parseLong(obj[5].toString()),Byte.parseByte(obj[3].toString()),Integer.parseInt(obj[8].toString())));
         }

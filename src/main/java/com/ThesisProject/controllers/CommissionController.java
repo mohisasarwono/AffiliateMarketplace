@@ -95,13 +95,22 @@ public class CommissionController {
     }
     
     @RequestMapping(value="getCommissionSummary",method = RequestMethod.GET)
-    public List<CommissionSummaryWrapper> getCommissionSummary(@RequestParam(name="promoterId",required = false, defaultValue = "0")Long promoterId, @RequestParam(name = "storeId", required = false, defaultValue = "0") Long storeId){
+    public List<CommissionSummaryWrapper> getCommissionSummary(@RequestParam(name="promoterId",required = false, defaultValue = "0")Long promoterId, 
+            @RequestParam(name = "storeId", required = false, defaultValue = "0") Long storeId, @RequestParam(name = "startDate", required = false, defaultValue = "null")String startDate,@RequestParam(name = "endDate", required = false, defaultValue = "null")String endDate){
         List<CommissionSummaryWrapper> thisOutput = new ArrayList();
         List<Object[]> thisDatas = new ArrayList();
-        if(promoterId>0)
-            thisDatas=commissionRepo.getDataForSummary(promoterId);
-        else if(storeId>0)
-            thisDatas=commissionRepo.getDataSummaryForStore(storeId);
+        if(promoterId>0){
+            if(!startDate.equals("null")&&!endDate.equals("null"))
+                thisDatas=commissionRepo.getDataForSummaryByDate(promoterId,startDate,endDate);
+            else
+                thisDatas=commissionRepo.getDataForSummary(promoterId);
+        }
+        else if(storeId>0){
+            if(!startDate.equals("null")&&!endDate.equals("null"))
+                thisDatas=commissionRepo.getDataSummaryForStore(storeId);    
+            else
+                thisDatas=commissionRepo.getDataSummaryForStore(storeId);
+        }
         for(Object[] data:thisDatas){
             thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString())));
         }

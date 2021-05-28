@@ -59,6 +59,8 @@ public class UserController {
     @RequestMapping(value = "login",method = RequestMethod.GET)
     public @ResponseBody Promoter login(@RequestParam(name = "email",required = true)String email,@RequestParam(name = "password",required = true)String passrword){
             Promoter promoter = promoRepo.findByEmailAndPassword(email, passrword);
+            if(promoter==null)
+                return new Promoter();
             return promoter;
     }
     
