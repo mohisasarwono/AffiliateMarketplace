@@ -39,9 +39,13 @@ public class ItemController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public void addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
-            Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("dd/MM/yyyy").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
+            Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("YYYY-MM-DD HH:MM:SS").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
             if(itemWrapper.getDescription()!=null)
                 item.setDescription(itemWrapper.getDescription());
+            if(itemWrapper.getQty()!=null)
+                item.setQty(itemWrapper.getQty());
+            if(itemWrapper.getRecurring()!=null)
+                item.setRecurring(itemWrapper.getRecurring());
             itemRepo.save(item);
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
@@ -63,6 +67,8 @@ public class ItemController {
             item.setExpiredDate(new Date(Date.parse(itemWrapper.getExpiredDate())));
         if(itemWrapper.getPrice()!=null)
             item.setPrice(itemWrapper.getPrice());
+        if(itemWrapper.getRecurring()!=null)
+            item.setRecurring(itemWrapper.getRecurring());
         itemRepo.save(item);
     }catch(Exception e){
         e.printStackTrace();

@@ -14,9 +14,10 @@ import java.util.Date;
 public class ItemWrapper {
     private Long id, storeId;
     private String name, description;
-    private Double price,commissionPriceOrPercentage;
+    private Double price,commissionPriceOrPercentage,qty;
     private Byte status, commissionStatus;
     private String expiredDate;
+    private Integer recurring;
 
     public ItemWrapper() {
     }
@@ -103,6 +104,21 @@ public class ItemWrapper {
     public void setExpiredDate(String expiredDate) {
         this.expiredDate = expiredDate;
     }
-    
+
+    public Integer getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(Integer recurring) {
+        this.recurring = recurring;
+    }
+
+    public Double getQty() {
+        return qty;
+    }
+
+    public void setQty(Double qty) {
+        this.qty = qty;
+    }
     
 }

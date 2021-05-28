@@ -26,9 +26,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name, description;
-    private Double price,commissionPriceOrPercentage;
+    private Double price,commissionPriceOrPercentage, qty;
     private Byte status, commissionStatus;
     private Date expiredDate;
+    private Integer recurring;
     
     @ManyToOne
     @JoinColumn(name = "store_id",referencedColumnName = "id",updatable = true, nullable = false)
@@ -127,7 +128,22 @@ public class Item {
     public void setExpiredDate(Date expiredDate) {
         this.expiredDate = expiredDate;
     }
-    
+
+    public Integer getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(Integer recurring) {
+        this.recurring = recurring;
+    }
+
+    public Double getQty() {
+        return qty;
+    }
+
+    public void setQty(Double qty) {
+        this.qty = qty;
+    }
     
     
 }
