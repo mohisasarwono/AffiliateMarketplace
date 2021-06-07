@@ -23,6 +23,11 @@ public interface PeripheralRepositories extends JpaRepository<Peripheral, Long>{
     Peripheral getByPeripheralLink(String peripheralLink);
     @Query(value ="select * from mst_peripheral where item_id =:itemId and referral_id =:referralId and status = 1", nativeQuery = true)
     Peripheral getByItemAndReferral(@Param("itemId")Long itemId, @Param("referralId")Long referralId);
+    @Query(value ="select coalesce(count(cd.id),0) from mst_peripheral as p " +
+    "join trx_commission as c on p.id = c.peripheral_id " +
+    "join trx_commission_detail as cd on cd.commission_id = c.id " +
+    "where peripheral_id = :peripheralId ", nativeQuery = true)
+    Integer getTotalTransactionFromPeripheral(@Param("peripheralId")Long peripheralId);
     
     List<Peripheral> getAllByReferralCode(ReferralCode referralCode); 
 }

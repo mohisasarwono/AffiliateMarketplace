@@ -11,7 +11,9 @@ import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
+import com.ThesisProject.wrappers.PeripheralWrapper;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +81,20 @@ public class PeripheralController {
     }
     
     @RequestMapping(value = "getAllByPromoter", method = RequestMethod.GET)
-    public List<Peripheral> getAllPeripheralByPromoter(@RequestParam(name="promoterId",required = true)Long promoterId){
-        return peripheralRepo.getAllByReferralCode(referralCodeRepo.findByPromoter(promoterId));
+    public List<PeripheralWrapper> getAllPeripheralByPromoter(@RequestParam(name="promoterId",required = true)Long promoterId){
+        List<PeripheralWrapper> thisPeripheralWrappers = new ArrayList();
+        List<Peripheral> peripheral = peripheralRepo.getAllByReferralCode(referralCodeRepo.findByPromoter(promoterId));
+        for(Peripheral temp : peripheral){
+            PeripheralWrapper pWTemp = new PeripheralWrapper();
+            pWTemp.setId(temp.getId());
+            pWTemp.setDuration(temp.getItem().getExpiredDate().toString());
+            pWTemp.setPeripheralLink(temp.getPeripheralLink());
+            pWTemp.setStatus(temp.getStatus());
+            pWTemp.setClickCounter(temp.getClickCounter());
+            pWTemp.setTotalTransaction(peripheralRepo.getTotalTransactionFromPeripheral(temp.getId()));
+            thisPeripheralWrappers.add(pWTemp);
+        }
+        return thisPeripheralWrappers;
     }
     
     @RequestMapping(value = "getByPromoterAndItem", method = RequestMethod.GET)
