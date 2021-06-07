@@ -44,20 +44,23 @@ public class PeripheralController {
         try{
         Peripheral thisPeripheral = peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
         if(thisPeripheral==null){
+            String refCode="";
             Item item =  itemRepo.getOne(itemId);
             ReferralCode referralCode = referralCodeRepo.findByPromoter(promoterId);
-            String peripheralLink = "mimiAffiliate.com/"+item.getStore().getId()+"/"+item.getId()+"/"+referralCode.getId();
-            thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item);
+            if(referralCode.getStatus()==1)
+                refCode = referralCode.getReferralBySystem();
+            else
+                refCode = referralCode.getReferralByUser();
+            String peripheralLink = "https://dummy-website-app.herokuapp.com/detail?"+item.getStore().getId()+"/"+item.getId()+"/"+refCode;
+            thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item,(byte)1);
             peripheralRepo.save(thisPeripheral);
-            message ="Success Promote this Item";
+            message =thisPeripheral.getPeripheralLink();
         }else{
-            thisPeripheral.setStatus((byte)1);
-            peripheralRepo.save(thisPeripheral);
-            message ="Success Promote this Item";
+            message =thisPeripheral.getPeripheralLink();
         }    
         }catch(Exception e){
             e.printStackTrace();
-            message = "Error";
+            message = "Error Occured, Please Contact Our Customer Service";
         }
         return message;
     }
@@ -83,6 +86,16 @@ public class PeripheralController {
     @RequestMapping(value = "getByPromoterAndItem", method = RequestMethod.GET)
     public Peripheral getByPromoterAndItem(@RequestParam(name="promoterId",required = true)Long promoterId,@RequestParam(name="itemId",required = true)Long itemId){
         return peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
+    }
+    
+    @RequestMapping(value ="checkPeripheralLink", method = RequestMethod.GET)
+    public Byte checkPeripheralLink(@RequestParam(name = "peripheralLink",required = true)String peripheralLink){
+        try{
+        return peripheralRepo.getByPeripheralLink(peripheralLink).getStatus();}
+        catch(Exception e){
+            e.printStackTrace();
+            return (byte)0;
+        }
     }
     
     @RequestMapping(value = "cancelPromote", method = RequestMethod.GET)

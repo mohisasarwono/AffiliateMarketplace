@@ -34,11 +34,12 @@ public class Peripheral {
     public Peripheral() {
     }
 
-    public Peripheral(String peripheralLink, Integer clickCounter, ReferralCode referralCode, Item item) {
+    public Peripheral(String peripheralLink, Integer clickCounter, ReferralCode referralCode, Item item,Byte status) {
         this.peripheralLink = peripheralLink;
         this.clickCounter = clickCounter;
         this.referralCode = referralCode;
         this.item = item;
+        this.status=status;
     }
     
     
