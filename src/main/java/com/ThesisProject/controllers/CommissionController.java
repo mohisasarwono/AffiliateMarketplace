@@ -95,8 +95,9 @@ public class CommissionController {
     }
     
     @RequestMapping(value="getCommissionSummary",method = RequestMethod.GET)
-    public List<CommissionSummaryWrapper> getCommissionSummary(@RequestParam(name="promoterId",required = false, defaultValue = "0")Long promoterId, 
+    public List<CommissionSummaryWrapper> getCommissionSummary(@RequestParam(name="promoterId",required = false, defaultValue = "0")Long promoterId,
             @RequestParam(name = "storeId", required = false, defaultValue = "0") Long storeId, @RequestParam(name = "startDate", required = false, defaultValue = "null")String startDate,@RequestParam(name = "endDate", required = false, defaultValue = "null")String endDate){
+        try{
         List<CommissionSummaryWrapper> thisOutput = new ArrayList();
         List<Object[]> thisDatas = new ArrayList();
         if(promoterId>0){
@@ -112,9 +113,14 @@ public class CommissionController {
                 thisDatas=commissionRepo.getDataSummaryForStore(storeId);
         }
         for(Object[] data:thisDatas){
-            thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString())));
+            thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString()),data[5].toString()));
         }
-        return thisOutput;}
+        return thisOutput;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     
     @RequestMapping(value="getPromoterBalance",method = RequestMethod.GET)
     public Double getPromoterBalance(@RequestParam(name = "promoterId",required = true)Long promoterId){

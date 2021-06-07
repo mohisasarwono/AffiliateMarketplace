@@ -53,8 +53,9 @@ public class PeripheralController {
                 refCode = referralCode.getReferralBySystem();
             else
                 refCode = referralCode.getReferralByUser();
-            String peripheralLink = "https://dummy-website-app.herokuapp.com/detail?"+item.getStore().getId()+"/"+item.getId()+"/"+refCode;
+            String peripheralLink = "https://dummy-website-app.herokuapp.com/detail/"+item.getStore().getId()+"/"+item.getId()+"/"+refCode;
             thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item,(byte)1);
+            thisPeripheral.setDuration(item.getExpiredDate());
             peripheralRepo.save(thisPeripheral);
             message =thisPeripheral.getPeripheralLink();
         }else{
@@ -92,7 +93,6 @@ public class PeripheralController {
             pWTemp.setStatus(temp.getStatus());
             pWTemp.setClickCounter(temp.getClickCounter());
             pWTemp.setTotalTransaction(peripheralRepo.getTotalTransactionFromPeripheral(temp.getId()));
-            thisPeripheralWrappers.add(pWTemp);
         }
         return thisPeripheralWrappers;
     }
