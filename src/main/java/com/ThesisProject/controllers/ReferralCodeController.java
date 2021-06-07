@@ -34,15 +34,15 @@ public class ReferralCodeController {
     @RequestMapping(value = "getGeneratedByUser", method = RequestMethod.GET)
     public String generatedByUser(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId){
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
-            if(referralCodeRepo.checkReferralCode(referralCode).isEmpty()){
-                System.out.println("1");
-                thisReferral.setReferralByUser(referralCode);
-                thisReferral.setStatus(BY_USER);
-                referralCodeRepo.save(thisReferral);
-                message ="Success Updating Referral Code";
-            }else{
-                System.out.println("2");
-                message ="Referral Code has been used by other";}
+           if(thisReferral.getReferralByUser()==referralCode){
+               message="Your inputted referral code is the same as your old referral code one";    
+           }else if(referralCodeRepo.checkReferralCode(referralCode).isEmpty()){
+               thisReferral.setReferralByUser(referralCode);
+               thisReferral.setStatus(BY_USER);
+               referralCodeRepo.save(thisReferral);
+               message ="Success Updating Referral Code";
+           }else{
+               message ="Referral Code has been used by other";}
         return message;
     }
     
@@ -66,13 +66,10 @@ public class ReferralCodeController {
     }
     
     @RequestMapping(value = "changeStatus", method=RequestMethod.GET)
-    public String changeStatus(@RequestParam(name="promoterId")Long promoterId){
+    public String changeStatus(@RequestParam(name="promoterId")Long promoterId, @RequestParam(name="status")Byte status){
         try{
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
-        if(thisReferral.getStatus()==BY_SYSTEM)
-            thisReferral.setStatus(BY_USER);
-        else
-            thisReferral.setStatus(BY_SYSTEM);
+        thisReferral.setStatus(status);
         referralCodeRepo.save(thisReferral);
         message="Success Changing Your Referral Code";
         }catch(Exception e){
