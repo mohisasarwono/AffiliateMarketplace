@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PromoterRepositories extends JpaRepository<Promoter, Long>{
+    Promoter findByIdAndPassword(Long id, String password);
     Promoter findByEmailAndPassword(String email, String password);
     Promoter getByEmail(String email);
     

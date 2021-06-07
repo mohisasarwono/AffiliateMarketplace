@@ -48,8 +48,8 @@ public class ItemController {
                 item.setQty(itemWrapper.getQty());
             if(itemWrapper.getRecurring()!=null)
                 item.setRecurring(itemWrapper.getRecurring());
-            if(itemWrapper.getTypeId()!=null)
-                item.setTypeId(itemWrapper.getTypeId());
+            if(itemWrapper.getType()!=null)
+                item.setType(itemWrapper.getType());
             itemRepo.save(item);
             message="Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
             return message;
@@ -77,8 +77,8 @@ public class ItemController {
             item.setPrice(itemWrapper.getPrice());
         if(itemWrapper.getRecurring()!=null)
             item.setRecurring(itemWrapper.getRecurring());
-        if(itemWrapper.getTypeId()!=null)
-            item.setTypeId(itemWrapper.getTypeId());
+        if(itemWrapper.getType()!=null)
+            item.setType(itemWrapper.getType());
         itemRepo.save(item);
         message="Success updating newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
         return message;

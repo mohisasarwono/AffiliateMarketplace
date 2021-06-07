@@ -122,16 +122,16 @@ public class CommissionController {
     }
     
     @RequestMapping(value="drawMoney",method = RequestMethod.GET)
-    public String drawMoney(@RequestParam(name = "promoterId",required = true)Long promoterId,@RequestParam(name = "balance",required = true)Double balance){
-        Double promoterBalance = getPromoterBalance(promoterId);
-        if(promoterBalance>balance){
-            Promoter promoter = promoterRepo.getOne(promoterId);
-            promoter.setCommissionMoney(promoter.getCommissionMoney()-promoterBalance);
+    public String drawMoney(@RequestParam(name = "promoterId",required = true)Long promoterId,@RequestParam(name = "balance",required = true)Double balance,@RequestParam(name="password",required = true)String password){
+        Promoter promoter = promoterRepo.findByIdAndPassword(promoterId, password);
+        if(promoter!=null){
+        if(promoter.getCommissionMoney()>balance){
+            promoter.setCommissionMoney(promoter.getCommissionMoney()-balance);
             promoterRepo.save(promoter);
             message="Success Draw Your Money";
         }else{
             message="Error : Your input value is greater than your balance";
-        }
+        }}else{message="Error : Password isn't correct"; }
         return message;
     }
 }

@@ -21,7 +21,7 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name, address, phoneNumber, photoProfileUrl, email,password;
+    private String name, address, phoneNumber, photoProfileUrl, email;
     private Byte status;
     private String storeDescription;
     private Integer type;
@@ -29,13 +29,12 @@ public class Store {
     public Store() {
     }
 
-    public Store(String name, String address, String phoneNumber, String photoProfileUrl, String email, String password, Byte status, String desc) {
+    public Store(String name, String address, String phoneNumber, String photoProfileUrl, String email, Byte status, String desc) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.photoProfileUrl = photoProfileUrl;
         this.email = email;
-        this.password = password;
         this.status = status;
         this.storeDescription = desc;
     }
@@ -94,14 +93,6 @@ public class Store {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Byte getStatus() {

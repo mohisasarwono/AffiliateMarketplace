@@ -133,7 +133,7 @@ public class MarketplaceController {
         List<MarketPlaceForItemWrapper> thisOutput = new ArrayList();
         List<Object[]> thisData = itemRepo.getDataForMarketplace(itemIds);
         for(Object[] obj: thisData){
-            thisOutput.add(new MarketPlaceForItemWrapper(Long.parseLong(obj[0].toString()), obj[1].toString(), obj[7].toString(), "imageUrl", Double.parseDouble(obj[2].toString()),Integer.parseInt(obj[6].toString()), obj[4].toString() , Long.parseLong(obj[5].toString()),Byte.parseByte(obj[3].toString()),Integer.parseInt(obj[8].toString()), Double.parseDouble(obj[9].toString()),Long.parseLong(obj[10].toString())));
+            thisOutput.add(new MarketPlaceForItemWrapper(Long.parseLong(obj[0].toString()), obj[1].toString(), obj[7].toString(), "imageUrl", Double.parseDouble(obj[2].toString()),Integer.parseInt(obj[6].toString()), obj[4].toString() , Long.parseLong(obj[5].toString()),Byte.parseByte(obj[3].toString()),Integer.parseInt(obj[8].toString()), Double.parseDouble(obj[9].toString()),obj[10].toString()));
         }
         return thisOutput;
       }

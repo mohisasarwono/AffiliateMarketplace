@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StoreWrapper {
     private Long id;
-    private String name, address, phoneNumber, photoProfileUrl, email,password;
+    private String name, address, phoneNumber, photoProfileUrl, email;
     private Byte status;
     private String storeDescription;
     private Integer type;
@@ -68,14 +68,6 @@ public class StoreWrapper {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Byte getStatus() {

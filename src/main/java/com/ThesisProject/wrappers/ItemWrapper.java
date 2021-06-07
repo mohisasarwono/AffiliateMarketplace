@@ -12,11 +12,11 @@ import java.util.Date;
  * @author LENOVO
  */
 public class ItemWrapper {
-    private Long id, storeId, typeId;
+    private Long id, storeId;
     private String name, description;
     private Double price,commissionPriceOrPercentage,qty;
     private Byte status, commissionStatus;
-    private String expiredDate;
+    private String expiredDate,type;
     private Integer recurring;
 
     public ItemWrapper() {
@@ -121,11 +121,11 @@ public class ItemWrapper {
         this.qty = qty;
     }
 
-    public Long getTypeId() {
-        return typeId;
+    public String getType() {
+        return type;
     }
 
-    public void setTypeId(Long typeId) {
-        this.typeId = typeId;
+    public void setType(String typeId) {
+        this.type = typeId;
     }
 }

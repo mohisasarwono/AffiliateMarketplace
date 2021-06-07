@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StoreRepositories extends JpaRepository<Store, Long> {
-    Store findByEmailAndPassword(String email, String password);
     
     @Query(value="select id from mst_store limit :limitData",nativeQuery = true)
     List<Long> getLimitDataForMarketplace(@Param("limitData") Long limitData);
