@@ -93,6 +93,7 @@ public class PeripheralController {
             pWTemp.setStatus(temp.getStatus());
             pWTemp.setClickCounter(temp.getClickCounter());
             pWTemp.setTotalTransaction(peripheralRepo.getTotalTransactionFromPeripheral(temp.getId()));
+            thisPeripheralWrappers.add(pWTemp);
         }
         return thisPeripheralWrappers;
     }
