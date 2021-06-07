@@ -34,8 +34,8 @@ public interface StoreRepositories extends JpaRepository<Store, Long> {
             + "join mst_item as i on s.id = i.store_id where i.name ilike(concat('%',:name,'%')) and i.status = 1 order by i.id ", nativeQuery = true)
     List<Long> getItemByItemName(@Param("name")String name);
     
-    @Query(value="select i.id as iId from mst_store as s "
-            + "join mst_item as i on s.id = i.store_id  where s.type = :type and  s.status = 1 and i.status = 1 order by i.id", nativeQuery = true )
+    @Query(value="select i.id as iId from mst_item as i "
+            + "where i.type_id = :type and i.status = 1 order by i.id", nativeQuery = true )
     List<Long> getItemByType(@Param("type")Integer type);
     
     @Query(value="select i.id from mst_store as s " +
