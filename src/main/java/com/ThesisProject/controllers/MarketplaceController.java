@@ -49,7 +49,7 @@ public class MarketplaceController {
     
     @RequestMapping(value="advanceSearch", method=RequestMethod.GET)
     public List<MarketPlaceForItemWrapper> advanceSearch(@RequestParam(name = "storeName",required = false,defaultValue = "null")String storeName,@RequestParam(name = "totalTransaction",required = false, defaultValue = "0")Integer totalTransac, 
-            @RequestParam(name = "type",required = false, defaultValue = "0")Integer type, @RequestParam(name="itemName",required = false,defaultValue = "null")String itemName,
+            @RequestParam(name = "type",required = false, defaultValue = "0")String type, @RequestParam(name="itemName",required = false,defaultValue = "null")String itemName,
             @RequestParam(name = "commissionRange",required = false, defaultValue = "0.0")Double commissionRange,@RequestParam(name = "commissionStatus",required = false, defaultValue = "0")Byte commissionStatus){
         List<Long> itemIds = new ArrayList();
         int param=0;
@@ -61,7 +61,7 @@ public class MarketplaceController {
             itemIds.addAll(storeRepo.getItemByTotalTransaction(totalTransac));
             param++;
         }
-        if(type>0){
+        if(!type.equals("null")){
             itemIds.addAll(storeRepo.getItemByType(type));
             param++;
         }
