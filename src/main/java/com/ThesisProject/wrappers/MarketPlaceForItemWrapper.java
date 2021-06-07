@@ -10,9 +10,9 @@ package com.ThesisProject.wrappers;
  * @author LENOVO
  */
 public class MarketPlaceForItemWrapper{
-    private Long id,storeId;
+    private Long id,storeId,typeId;
     private String name,desc, imageUrl;
-    protected Double commision;
+    protected Double commision,price;
     private Integer totalTranscation, totalView;
     private String durationDate;
     private Byte commissionStat;
@@ -20,7 +20,7 @@ public class MarketPlaceForItemWrapper{
     public MarketPlaceForItemWrapper() {
     }
 
-    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat, Integer totalView) {
+    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat, Integer totalView, Double price, Long typeId) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -31,6 +31,8 @@ public class MarketPlaceForItemWrapper{
         this.storeId = storeId;
         this.commissionStat = commissionStat;
         this.totalView = totalView;
+        this.price = price;
+        this.typeId = typeId;
     }
 
     public Double getCommision() {
@@ -112,6 +114,21 @@ public class MarketPlaceForItemWrapper{
     public void setTotalView(Integer totalView) {
         this.totalView = totalView;
     }
-    
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
     
 }

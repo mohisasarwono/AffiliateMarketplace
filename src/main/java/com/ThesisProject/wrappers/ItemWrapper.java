@@ -12,7 +12,7 @@ import java.util.Date;
  * @author LENOVO
  */
 public class ItemWrapper {
-    private Long id, storeId;
+    private Long id, storeId, typeId;
     private String name, description;
     private Double price,commissionPriceOrPercentage,qty;
     private Byte status, commissionStatus;
@@ -120,5 +120,12 @@ public class ItemWrapper {
     public void setQty(Double qty) {
         this.qty = qty;
     }
-    
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
 }

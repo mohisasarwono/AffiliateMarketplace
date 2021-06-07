@@ -30,6 +30,7 @@ public class Item {
     private Byte status, commissionStatus;
     private Date expiredDate;
     private Integer recurring;
+    private Long typeId;
     
     @ManyToOne
     @JoinColumn(name = "store_id",referencedColumnName = "id",updatable = true, nullable = false)
@@ -143,6 +144,14 @@ public class Item {
 
     public void setQty(Double qty) {
         this.qty = qty;
+    }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
     
     

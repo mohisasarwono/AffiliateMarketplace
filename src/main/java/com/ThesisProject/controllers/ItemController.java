@@ -36,8 +36,10 @@ public class ItemController {
     @Autowired
     StoreRepositories storeRepo;
     
+    String message;
+    
     @RequestMapping(value = "add",method = RequestMethod.POST)
-    public void addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
+    public String addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
             Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("YYYY-MM-DD HH:MM:SS").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
             if(itemWrapper.getDescription()!=null)
@@ -46,15 +48,21 @@ public class ItemController {
                 item.setQty(itemWrapper.getQty());
             if(itemWrapper.getRecurring()!=null)
                 item.setRecurring(itemWrapper.getRecurring());
+            if(itemWrapper.getTypeId()!=null)
+                item.setTypeId(itemWrapper.getTypeId());
             itemRepo.save(item);
+            message="Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
+            return message;
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
+            message="Error Occured, Please Input Data Correctly";
+            return message;
         }
     
     }
     
-    @RequestMapping(value="update", method = RequestMethod.PUT)
-    public void updateItem(@RequestBody ItemWrapper itemWrapper){
+    @RequestMapping(value="update", method = RequestMethod.POST)
+    public String updateItem(@RequestBody ItemWrapper itemWrapper){
     try{
         Item item = itemRepo.getOne(itemWrapper.getId());
         if(itemWrapper.getName()!=null)
@@ -69,9 +77,15 @@ public class ItemController {
             item.setPrice(itemWrapper.getPrice());
         if(itemWrapper.getRecurring()!=null)
             item.setRecurring(itemWrapper.getRecurring());
+        if(itemWrapper.getTypeId()!=null)
+            item.setTypeId(itemWrapper.getTypeId());
         itemRepo.save(item);
+        message="Success updating newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
+        return message;
     }catch(Exception e){
         e.printStackTrace();
+        message="Error Occured, Please Input Data Correctly";
+        return message;
     }
     }
     
