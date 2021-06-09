@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ItemWrapper {
     private Long id, storeId;
-    private String name, description;
+    private String name, description, photoURL;
     private Double price,commissionPriceOrPercentage,qty;
     private Byte status, commissionStatus;
     private String expiredDate,type;
@@ -128,4 +128,14 @@ public class ItemWrapper {
     public void setType(String typeId) {
         this.type = typeId;
     }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+    
+    
 }

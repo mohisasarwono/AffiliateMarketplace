@@ -50,6 +50,8 @@ public class ItemController {
                 item.setRecurring(itemWrapper.getRecurring());
             if(itemWrapper.getType()!=null)
                 item.setType(itemWrapper.getType());
+            if(itemWrapper.getPhotoURL()!=null)
+                item.setPhotoUrl(itemWrapper.getPhotoURL());
             itemRepo.save(item);
             message="Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
             return message;
@@ -79,6 +81,8 @@ public class ItemController {
             item.setRecurring(itemWrapper.getRecurring());
         if(itemWrapper.getType()!=null)
             item.setType(itemWrapper.getType());
+        if(itemWrapper.getPhotoURL()!=null)
+            item.setPhotoUrl(itemWrapper.getPhotoURL());
         itemRepo.save(item);
         message="Success updating newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
         return message;

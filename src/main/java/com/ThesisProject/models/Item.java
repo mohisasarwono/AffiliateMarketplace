@@ -30,7 +30,7 @@ public class Item {
     private Byte status, commissionStatus;
     private Date expiredDate;
     private Integer recurring;
-    private String type;
+    private String type, photoUrl;
     
     @ManyToOne
     @JoinColumn(name = "store_id",referencedColumnName = "id",updatable = true, nullable = false)
@@ -153,6 +153,13 @@ public class Item {
     public void setType(String type) {
         this.type = type;
     }
-    
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
     
 }

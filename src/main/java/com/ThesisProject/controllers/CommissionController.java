@@ -82,7 +82,7 @@ public class CommissionController {
                  newCommissionDetail.setRecurringCounter(1);
             else{
                 if(isRecurring.length>0){
-                    if(recurringCounter>Integer.parseInt(isRecurring[0][1]))
+                    if(recurringCounter>Integer.parseInt(isRecurring[0][1])&&commissionData.getCustomerId().toString().equals(isRecurring[0][2]))
                         newCommissionDetail.setRecurringCounter(1);
                     else 
                         newCommissionDetail.setRecurringCounter(0);

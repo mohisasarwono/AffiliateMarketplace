@@ -15,7 +15,7 @@ import org.springframework.data.repository.query.Param;
  * @author LENOVO
  */
 public interface CommissionDetailRepositories extends JpaRepository<CommissionDetail, Long> {
-    @Query(value="select p.peripheral_link, cast(count(cd.id) as varchar(255)) as recCounter from trx_commission_detail as cd " +
+    @Query(value="select p.peripheral_link, cast(count(cd.id) as varchar(255)) as recCounter,cast(p.id as varchar(255)) as pId from trx_commission_detail as cd " +
                  "join trx_commission as c on cd.commission_id = c.id " +
                  "join mst_peripheral as p on p.id = c.peripheral_id " +
                  "where c.id = :commId and cd.recurring_counter > 0 group by p.id", nativeQuery = true)
