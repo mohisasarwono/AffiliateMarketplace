@@ -65,10 +65,10 @@ public class CommissionController {
             commissionRepo.save(commission);
         }
         
-        String[][] isRecurring = checkRecurring(commission.getId());
-            System.out.println(isRecurring.length);
         Integer recurringCounter=peripheral.getItem().getRecurring();
             System.out.println(recurringCounter);
+        String[][] isRecurring = checkRecurring(commission.getId());
+            System.out.println(isRecurring.length);
         if(isRecurring.length==0)
                 System.out.println("Null Nih");
         for(CommissionDetailWrapper thisCommDet : commissionData.getCommissionDetails()){
@@ -162,12 +162,29 @@ public class CommissionController {
         return message;
     }
     
-    @RequestMapping(value="checkRecurring",method = RequestMethod.GET)
+//    @RequestMapping(value="checkRecurring",method = RequestMethod.GET)
     public String[][] checkRecurring(@RequestParam(name = "commissionId")Long commissionId){
+        Integer recurring = commissionRepo.getOne(commissionId).getPeripheral().getItem().getRecurring();
         String[][] output = commissionDetRepo.checkIsTheFirstCustomerRecurring(commissionId);
         if(output!=null){
-//            System.out.println(output[0][0]+" "+output[0][1]);
+            if(Integer.parseInt(output[0][1])>recurring)
+                return new String[1][1];
             return output;}
         return new String[1][1];
     }
+    
+    @RequestMapping(value="checkRecurringByCustId",method = RequestMethod.GET)
+    public String checkRecurringByCustId(@RequestParam(name = "customerId")Long customerId, @RequestParam(name = "itemId")Long itemId){
+        String[][] output = commissionDetRepo.checkIsTheFirstCustomerRecurringByCustId(customerId,itemId);
+           System.out.println(output.length);
+        if(output.length>=0){
+            System.out.println("A");
+            for(int i=0;i<output.length;i++){
+            if(Integer.parseInt(output[i][1])<Integer.parseInt(output[i][2]))
+                return output[i][3];
+            }
+        }
+        return "null";
+    }
+    
 }
