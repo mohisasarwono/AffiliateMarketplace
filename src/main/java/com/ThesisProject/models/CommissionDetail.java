@@ -26,6 +26,8 @@ public class CommissionDetail {
     private Long id;
     private Date transactionDate;
     private Double qty, price, commissionAmount;
+    private Long customerId; 
+    private Integer recurringCounter;
     
     @ManyToOne
     @JoinColumn(name = "commission_id",referencedColumnName = "id",updatable = true)
@@ -80,6 +82,22 @@ public class CommissionDetail {
 
     public void setCommission(Commission commission) {
         this.commission = commission;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Integer getRecurringCounter() {
+        return recurringCounter;
+    }
+
+    public void setRecurringCounter(Integer recurringCounter) {
+        this.recurringCounter = recurringCounter;
     }
     
 }

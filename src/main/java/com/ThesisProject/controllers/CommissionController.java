@@ -10,6 +10,7 @@ import com.ThesisProject.models.CommissionDetail;
 import com.ThesisProject.models.Item;
 import com.ThesisProject.models.Peripheral;
 import com.ThesisProject.models.Promoter;
+import com.ThesisProject.repositories.CommissionDetailRepositories;
 import com.ThesisProject.repositories.CommissionRepositories;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
@@ -37,6 +38,9 @@ public class CommissionController {
     CommissionRepositories commissionRepo;
     
     @Autowired
+    CommissionDetailRepositories commissionDetRepo;
+    
+    @Autowired
     PeripheralRepositories peripheralRepo;
     
     @Autowired
@@ -61,16 +65,33 @@ public class CommissionController {
             commissionRepo.save(commission);
         }
         
+        String[][] isRecurring = checkRecurring(commission.getId());
+            System.out.println(isRecurring.length);
+        Integer recurringCounter=peripheral.getItem().getRecurring();
+            System.out.println(recurringCounter);
+        if(isRecurring.length==0)
+                System.out.println("Null Nih");
         for(CommissionDetailWrapper thisCommDet : commissionData.getCommissionDetails()){
             CommissionDetail newCommissionDetail = new CommissionDetail();
             newCommissionDetail.setPrice(thisCommDet.getPrice());
             newCommissionDetail.setQty(thisCommDet.getQty());
             newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId(),peripheral.getId()));
             newCommissionDetail.setCommission(commission);
+            newCommissionDetail.setCustomerId(commissionData.getCustomerId());
+            if(recurringCounter>0&&isRecurring.length==0)
+                 newCommissionDetail.setRecurringCounter(1);
+            else{
+                if(isRecurring.length>0){
+                    if(recurringCounter>Integer.parseInt(isRecurring[0][1]))
+                        newCommissionDetail.setRecurringCounter(1);
+                    else 
+                        newCommissionDetail.setRecurringCounter(0);
+                }}
             totalCommissionAmount += newCommissionDetail.getCommissionAmount();
+            commissionDetRepo.save(newCommissionDetail);
         }
-        commission.setTotalCommissionAmount(totalCommissionAmount);
-        commission.setTotalTransaction(commissionData.getCommissionDetails().size());
+        commission.setTotalCommissionAmount(commission.getTotalCommissionAmount()+totalCommissionAmount);
+        commission.setTotalTransaction(commission.getTotalTransaction()+commissionData.getCommissionDetails().size());
         commissionRepo.save(commission);
         message = "Success adding commission";
         }catch(Exception e){
@@ -139,5 +160,14 @@ public class CommissionController {
             message="Error : Your input value is greater than your balance";
         }}else{message="Error : Password isn't correct"; }
         return message;
+    }
+    
+    @RequestMapping(value="checkRecurring",method = RequestMethod.GET)
+    public String[][] checkRecurring(@RequestParam(name = "commissionId")Long commissionId){
+        String[][] output = commissionDetRepo.checkIsTheFirstCustomerRecurring(commissionId);
+        if(output!=null){
+//            System.out.println(output[0][0]+" "+output[0][1]);
+            return output;}
+        return new String[1][1];
     }
 }

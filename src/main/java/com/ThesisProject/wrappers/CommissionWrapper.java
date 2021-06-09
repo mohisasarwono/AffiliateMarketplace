@@ -12,7 +12,7 @@ import java.util.List;
  * @author LENOVO
  */
 public class CommissionWrapper {
-    private Long id;
+    private Long id,customerId;;
     private String peripheralLink;
     private Double totalCommissionAmount, totalTransaction;
     private List<CommissionDetailWrapper> commissionDetails;
@@ -59,5 +59,11 @@ public class CommissionWrapper {
     public void setPeripheralLink(String peripheralLink) {
         this.peripheralLink = peripheralLink;
     }
-    
+     public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
 }

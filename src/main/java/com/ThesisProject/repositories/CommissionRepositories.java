@@ -62,5 +62,4 @@ public interface CommissionRepositories extends JpaRepository<Commission, Long> 
 "        where s.id = :storeId and cd.transaction_date between :startDate and :endDate " +
 "        group by s.id, pr.id,pLink", nativeQuery = true)
     List<Object[]>getDataSummaryForStoreByDate(@Param("storeId")Long storeId, @Param("startDate") String startDate, @Param("endDate") String endDate);
-
 }

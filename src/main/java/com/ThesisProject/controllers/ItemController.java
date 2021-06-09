@@ -103,11 +103,11 @@ public class ItemController {
     
     @RequestMapping(value = "getAllItem", method=RequestMethod.GET,produces="application/json")
     public List<Item> getAllItem(){
-       return itemRepo.getAll();
+       return itemRepo.getAllLimit();
     }
     
     @RequestMapping(value="getById", method=RequestMethod.GET,produces="application/json")
     public Item getById(@RequestParam(name = "id")Long id){
-        return itemRepo.getOne(id);
+        return itemRepo.getItemById(id);
     }
 }

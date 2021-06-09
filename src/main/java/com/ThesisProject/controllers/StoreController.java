@@ -77,8 +77,8 @@ public class StoreController {
             store.setPhotoProfileUrl(storeWrapper.getPhotoProfileUrl());
         if(storeWrapper.getStoreDescription()!=null)
             store.setStoreDescription(storeWrapper.getStoreDescription());
-        if(storeWrapper.getType()!=null)
-            store.setType(storeWrapper.getType());
+//        if(storeWrapper.getType()!=null)
+//            store.setType(storeWrapper.getType());
         store.setStatus((byte)1);
         storeRepo.save(store);
         if(storeWrapper.getItems()!=null){

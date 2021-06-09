@@ -23,7 +23,10 @@ public interface ItemRepositories extends JpaRepository<Item, Long> {
     List<Item> getByStoreAndStatus(@Param("storeId")Long storeId);
     
     @Query(value = "select * from mst_item order by id limit 100",nativeQuery = true)
-    List<Item> getAll();
+    List<Item> getAllLimit();
+    
+    @Query(value = "select * from mst_item where id =:id",nativeQuery = true)
+    Item getItemById(@Param("id")Long id);
     
     @Query(value = "select i.id as iId, i.name as iName, i.commission_price_or_percentage as iComPriOrPer, i.commission_status as iComStat, " +
 "	i.expired_date as iExpDate, i.store_id as iStoreId, coalesce(count(cd.id),0) as totalTransc, i.description as iDesc, coalesce(sum(p.click_counter),0) as totalView, i.price as price, i.type as type " +
