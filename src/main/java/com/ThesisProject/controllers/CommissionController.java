@@ -15,9 +15,11 @@ import com.ThesisProject.repositories.CommissionRepositories;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
 import com.ThesisProject.repositories.PromoterRepositories;
+import com.ThesisProject.services.UserServices;
 import com.ThesisProject.wrappers.CommissionDetailWrapper;
 import com.ThesisProject.wrappers.CommissionSummaryWrapper;
 import com.ThesisProject.wrappers.CommissionWrapper;
+import com.ThesisProject.wrappers.TranscMessageWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +50,11 @@ public class CommissionController {
     
     @Autowired
     PromoterRepositories promoterRepo;
-    
     String message;
     
     @RequestMapping(value="add",method = RequestMethod.POST)
-    public String addCommission(@RequestBody CommissionWrapper commissionData){
+    public TranscMessageWrapper addCommission(@RequestBody CommissionWrapper commissionData){
+        TranscMessageWrapper transMessage = new TranscMessageWrapper();
         Double totalCommissionAmount = 0.0;
         Peripheral peripheral=peripheralRepo.getByPeripheralLink(commissionData.getPeripheralLink());
         Commission commission = commissionRepo.getByPeripheral(peripheral);
@@ -93,12 +95,16 @@ public class CommissionController {
         commission.setTotalCommissionAmount(commission.getTotalCommissionAmount()+totalCommissionAmount);
         commission.setTotalTransaction(commission.getTotalTransaction()+commissionData.getCommissionDetails().size());
         commissionRepo.save(commission);
-        message = "Success adding commission";
+        transMessage.setMessage("Transaction Successed");
+        transMessage.setCode("SUC");
+        transMessage.setStatus(true);
         }catch(Exception e){
             e.printStackTrace();
-            message="Error";
+            transMessage.setMessage("Transaction Failed");
+            transMessage.setCode("FL");
+            transMessage.setStatus(false);
         }
-        return message;
+        return transMessage;
     }
     
     public Double calculateCommissionAmount(Double price, Double qty, Long itemId, Long peripheralId){
@@ -177,7 +183,7 @@ public class CommissionController {
     public String checkRecurringByCustId(@RequestParam(name = "customerId")Long customerId, @RequestParam(name = "itemId")Long itemId){
         String[][] output = commissionDetRepo.checkIsTheFirstCustomerRecurringByCustId(customerId,itemId);
            System.out.println(output.length);
-        if(output.length>=0){
+        if(output.length>0){
             System.out.println("A");
             for(int i=0;i<output.length;i++){
             if(Integer.parseInt(output[i][1])<Integer.parseInt(output[i][2]))
