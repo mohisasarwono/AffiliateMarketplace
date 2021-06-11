@@ -114,4 +114,10 @@ public class ItemController {
     public Item getById(@RequestParam(name = "id")Long id){
         return itemRepo.getItemById(id);
     }
+    
+    public void calculateQty(Item item, Double thisQty){
+        Item thisItem = item;
+        thisItem.setQty(thisItem.getQty()-thisQty);
+        itemRepo.save(thisItem);
+    }
 }

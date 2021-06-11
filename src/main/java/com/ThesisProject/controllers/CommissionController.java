@@ -15,7 +15,6 @@ import com.ThesisProject.repositories.CommissionRepositories;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
 import com.ThesisProject.repositories.PromoterRepositories;
-import com.ThesisProject.services.UserServices;
 import com.ThesisProject.wrappers.CommissionDetailWrapper;
 import com.ThesisProject.wrappers.CommissionSummaryWrapper;
 import com.ThesisProject.wrappers.CommissionWrapper;
@@ -46,7 +45,10 @@ public class CommissionController {
     PeripheralRepositories peripheralRepo;
     
     @Autowired
-    ItemRepositories itemRepo; 
+    ItemRepositories itemRepo;
+    
+    @Autowired
+    ItemController itemCont;
     
     @Autowired
     PromoterRepositories promoterRepo;
@@ -101,6 +103,7 @@ public class CommissionController {
                 }
             totalCommissionAmount += newCommissionDetail.getCommissionAmount();
             commissionDetRepo.save(newCommissionDetail);
+            itemCont.calculateQty(peripheral.getItem(),thisCommDet.getQty());
         }
         commission.setTotalCommissionAmount(commission.getTotalCommissionAmount()+totalCommissionAmount);
         commission.setTotalTransaction(commission.getTotalTransaction()+commissionData.getCommissionDetails().size());
