@@ -50,28 +50,33 @@ public class CommissionController {
     
     @Autowired
     PromoterRepositories promoterRepo;
+        
     String message;
     
     @RequestMapping(value="add",method = RequestMethod.POST)
     public TranscMessageWrapper addCommission(@RequestBody CommissionWrapper commissionData){
         TranscMessageWrapper transMessage = new TranscMessageWrapper();
         Double totalCommissionAmount = 0.0;
+        boolean nullFlag = false;
         Peripheral peripheral=peripheralRepo.getByPeripheralLink(commissionData.getPeripheralLink());
         Commission commission = commissionRepo.getByPeripheral(peripheral);
+         String[][] isRecurring= new String[10][10];
         try{
+        Integer recurringCounter=peripheral.getItem().getRecurring();
+            System.out.println(recurringCounter);
+        if(commission!=null){ 
+        isRecurring = checkRecurring(commission.getId(),nullFlag);
+            System.out.println(isRecurring.length);}
         if(commission==null){
+            nullFlag=true;
             commission = new Commission();
             commission.setPeripheral(peripheralRepo.getByPeripheralLink(commissionData.getPeripheralLink()));
             commission.setTotalCommissionAmount(0.0);
             commission.setTotalTransaction(0);
             commissionRepo.save(commission);
         }
-        
-        Integer recurringCounter=peripheral.getItem().getRecurring();
-            System.out.println(recurringCounter);
-        String[][] isRecurring = checkRecurring(commission.getId());
-            System.out.println(isRecurring.length);
-        if(isRecurring.length==0)
+            System.out.println(nullFlag);
+        if(isRecurring.length==0&&nullFlag==false)
                 System.out.println("Null Nih");
         for(CommissionDetailWrapper thisCommDet : commissionData.getCommissionDetails()){
             CommissionDetail newCommissionDetail = new CommissionDetail();
@@ -80,15 +85,20 @@ public class CommissionController {
             newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId(),peripheral.getId()));
             newCommissionDetail.setCommission(commission);
             newCommissionDetail.setCustomerId(commissionData.getCustomerId());
-            if(recurringCounter>0&&isRecurring.length==0)
+            if(recurringCounter>0&&nullFlag==true)
                  newCommissionDetail.setRecurringCounter(1);
             else{
-                if(isRecurring.length>0){
-                    if(recurringCounter>Integer.parseInt(isRecurring[0][1])&&commissionData.getCustomerId().toString().equals(isRecurring[0][2]))
+                    Integer tempInt=999999;
+                    String tempString="=1";
+                    if(nullFlag==false){
+                         tempInt = Integer.parseInt(isRecurring[0][1]);
+                         tempString =isRecurring[0][2];
+                    }
+                    if(recurringCounter>tempInt&&commissionData.getCustomerId().toString().equals(tempString))
                         newCommissionDetail.setRecurringCounter(1);
                     else 
                         newCommissionDetail.setRecurringCounter(0);
-                }}
+                }
             totalCommissionAmount += newCommissionDetail.getCommissionAmount();
             commissionDetRepo.save(newCommissionDetail);
         }
@@ -169,10 +179,14 @@ public class CommissionController {
     }
     
 //    @RequestMapping(value="checkRecurring",method = RequestMethod.GET)
-    public String[][] checkRecurring(@RequestParam(name = "commissionId")Long commissionId){
+    public String[][] checkRecurring(@RequestParam(name = "commissionId")Long commissionId, boolean flag){
         Integer recurring = commissionRepo.getOne(commissionId).getPeripheral().getItem().getRecurring();
         String[][] output = commissionDetRepo.checkIsTheFirstCustomerRecurring(commissionId);
-        if(output!=null){
+        if(output!=null)
+            System.out.println("Null");
+        if(output.length>0)
+            System.out.println("Length");
+        if(output.length>0&&flag==false){
             if(Integer.parseInt(output[0][1])>recurring)
                 return new String[1][1];
             return output;}
