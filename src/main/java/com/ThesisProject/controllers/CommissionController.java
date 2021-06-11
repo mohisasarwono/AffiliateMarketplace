@@ -19,6 +19,8 @@ import com.ThesisProject.wrappers.CommissionDetailWrapper;
 import com.ThesisProject.wrappers.CommissionSummaryWrapper;
 import com.ThesisProject.wrappers.CommissionWrapper;
 import com.ThesisProject.wrappers.TranscMessageWrapper;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,12 +89,14 @@ public class CommissionController {
             newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId(),peripheral.getId()));
             newCommissionDetail.setCommission(commission);
             newCommissionDetail.setCustomerId(commissionData.getCustomerId());
+            newCommissionDetail.setTransactionDate( new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"). parse(thisCommDet.getTransactionDate()));
+            System.out.println(newCommissionDetail.getTransactionDate());
             if(recurringCounter>0&&nullFlag==true)
                  newCommissionDetail.setRecurringCounter(1);
             else{
                     Integer tempInt=999999;
                     String tempString="=1";
-                    if(nullFlag==false){
+                    if(nullFlag==false&&recurringCounter>0){
                          tempInt = Integer.parseInt(isRecurring[0][1]);
                          tempString =isRecurring[0][2];
                     }
