@@ -54,18 +54,20 @@ public class CommissionController {
     
     @Autowired
     PromoterRepositories promoterRepo;
+    
+    TranscMessageWrapper transMessage;
         
     String message;
     
     @RequestMapping(value="add",method = RequestMethod.POST)
     public TranscMessageWrapper addCommission(@RequestBody CommissionWrapper commissionData){
-        TranscMessageWrapper transMessage = new TranscMessageWrapper();
+        transMessage = new TranscMessageWrapper();
         Double totalCommissionAmount = 0.0;
         boolean nullFlag = false;
         Peripheral peripheral=peripheralRepo.getByPeripheralLink(commissionData.getPeripheralLink());
         Commission commission = commissionRepo.getByPeripheral(peripheral);
-         String[][] isRecurring= new String[10][10];
-        try{
+        String[][] isRecurring= new String[10][10];
+        try{    
         Integer recurringCounter=peripheral.getItem().getRecurring();
             System.out.println(recurringCounter);
         if(commission!=null){ 
@@ -107,7 +109,7 @@ public class CommissionController {
                 }
             totalCommissionAmount += newCommissionDetail.getCommissionAmount();
             commissionDetRepo.save(newCommissionDetail);
-            itemCont.calculateQty(peripheral.getItem(),thisCommDet.getQty());
+            itemCont.calculateQty(peripheral.getItem().getId(),thisCommDet.getQty());
         }
         commission.setTotalCommissionAmount(commission.getTotalCommissionAmount()+totalCommissionAmount);
         commission.setTotalTransaction(commission.getTotalTransaction()+commissionData.getCommissionDetails().size());
@@ -214,4 +216,17 @@ public class CommissionController {
         return "null";
     }
     
+    @RequestMapping(value="calculateQty", method=RequestMethod.POST)
+    public TranscMessageWrapper calculateQtyForTrans(@RequestBody CommissionWrapper commissionData){
+        String[] splitLink = commissionData.getPeripheralLink().split("/",5);
+        Long itemId = Long.parseLong(splitLink[2]);
+        transMessage = new TranscMessageWrapper();
+        for(CommissionDetailWrapper temp : commissionData.getCommissionDetails()){
+           itemCont.calculateQty(itemId, temp.getQty());
+        }
+        transMessage.setMessage("Transaction Successed");
+        transMessage.setCode("SUC");
+        transMessage.setStatus(true);
+        return transMessage;
+    }
 }

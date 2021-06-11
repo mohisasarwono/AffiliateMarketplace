@@ -115,8 +115,8 @@ public class ItemController {
         return itemRepo.getItemById(id);
     }
     
-    public void calculateQty(Item item, Double thisQty){
-        Item thisItem = item;
+    public void calculateQty(Long itemId, Double thisQty){
+        Item thisItem = itemRepo.getItemById(itemId);
         thisItem.setQty(thisItem.getQty()-thisQty);
         itemRepo.save(thisItem);
     }
