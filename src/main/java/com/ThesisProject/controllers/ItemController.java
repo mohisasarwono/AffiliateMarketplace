@@ -115,9 +115,12 @@ public class ItemController {
         return itemRepo.getItemById(id);
     }
     
-    public void calculateQty(Long itemId, Double thisQty){
+    public boolean calculateQty(Long itemId, Double thisQty){
         Item thisItem = itemRepo.getItemById(itemId);
-        thisItem.setQty(thisItem.getQty()-thisQty);
-        itemRepo.save(thisItem);
+        if(thisItem.getQty()>thisQty&&thisItem.getQty()>0){
+            thisItem.setQty(thisItem.getQty()-thisQty);
+            itemRepo.save(thisItem);
+            return true;}
+        return false;
     }
 }

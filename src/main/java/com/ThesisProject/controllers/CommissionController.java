@@ -221,12 +221,19 @@ public class CommissionController {
         String[] splitLink = commissionData.getPeripheralLink().split("/",5);
         Long itemId = Long.parseLong(splitLink[2]);
         transMessage = new TranscMessageWrapper();
+        boolean isTrue = true;
         for(CommissionDetailWrapper temp : commissionData.getCommissionDetails()){
-           itemCont.calculateQty(itemId, temp.getQty());
+           isTrue = itemCont.calculateQty(itemId, temp.getQty());
         }
+        if(isTrue==true){
         transMessage.setMessage("Transaction Successed");
         transMessage.setCode("SUC");
-        transMessage.setStatus(true);
+        transMessage.setStatus(true);}
+        else{
+        transMessage.setMessage("Transaction Failed");
+        transMessage.setCode("FL");
+        transMessage.setStatus(false);
+        }
         return transMessage;
     }
 }

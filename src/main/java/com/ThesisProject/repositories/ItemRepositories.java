@@ -34,7 +34,7 @@ public interface ItemRepositories extends JpaRepository<Item, Long> {
 "left join mst_peripheral as p on p.item_id = i.id " +
 "left join trx_commission as c on c.peripheral_id = p.id " +
 "left join trx_commission_detail as cd on cd.commission_id = c.id " +
-"where i.id in (:itemIds) " +
+"where i.id in (:itemIds) and i.qty > 0 " +
 "group by iId, p.item_id order by i.store_id",nativeQuery=true)
     List<Object[]> getDataForMarketplace(@Param("itemIds")List<Long> itemIds);
     
