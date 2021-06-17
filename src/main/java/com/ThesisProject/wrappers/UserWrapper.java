@@ -6,15 +6,14 @@
 package com.ThesisProject.wrappers;
 
 import java.util.Date;
-
+ 
 /**
  *
  * @author LENOVO
  */
 public class UserWrapper {
     private Long id;
-    private String name, address, phoneNumber, photoProfileUrl, email,password, gender;
-    private Date DoB;
+    private String name, address, phoneNumber, photoProfileUrl, email,password, gender, DoB;
     public UserWrapper() {
     }
 
@@ -84,11 +83,11 @@ public class UserWrapper {
         this.password = password;
     }
 
-    public Date getDoB() {
+    public String getDoB() {
         return DoB;
     }
 
-    public void setDoB(Date DoB) {
+    public void setDoB(String DoB) {
         this.DoB = DoB;
     }
 

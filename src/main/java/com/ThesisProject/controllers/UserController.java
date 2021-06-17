@@ -77,7 +77,8 @@ public class UserController {
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
         Promoter promoter = promoRepo.getOne(userWrapper.getId());
         try{
-            saveData(userWrapper,promoter,false);
+            String DoB = saveData(userWrapper,promoter,false);
+            System.out.println(DoB);
             GsonBuilder gsonB = new GsonBuilder().registerTypeAdapter(Promoter.class, new JsonSerializer<Promoter>(){
                 @Override
                 public JsonElement serialize(Promoter promoter, Type type, JsonSerializationContext jsonSerializationContext) {
@@ -89,7 +90,7 @@ public class UserController {
                     jsonObject.addProperty("photoProfileUrl", promoter.getPhotoProfileUrl());
                     jsonObject.addProperty("email", promoter.getEmail());
                     jsonObject.addProperty("gender", promoter.getGender());
-                    jsonObject.addProperty("DoB", promoter.getDoB().toString());
+                    jsonObject.addProperty("DoB", DoB);
                     jsonObject.addProperty("status", promoter.getStatus());
                     jsonObject.addProperty("commissionMoney", promoter.getCommissionMoney().doubleValue());
                     return jsonObject;
@@ -106,6 +107,7 @@ public class UserController {
     }
     
     public String saveData(UserWrapper userWrapper, Promoter promoter,boolean isRegis){
+        String dateOfBirth = promoter.getDoB().toString();
         if(userWrapper.getName()!=null)
             promoter.setName(userWrapper.getName());
         if(userWrapper.getAddress()!=null)
@@ -118,8 +120,14 @@ public class UserController {
             promoter.setEmail( userWrapper.getEmail());
         if(userWrapper.getPhotoProfileUrl()!=null)
             promoter.setPhotoProfileUrl(userWrapper.getPhotoProfileUrl());
-        if(userWrapper.getDoB()!=null)
-            promoter.setDoB(userWrapper.getDoB());
+        try{
+        if(userWrapper.getDoB()!=null){
+            promoter.setDoB(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userWrapper.getDoB()));
+            dateOfBirth = userWrapper.getDoB();
+        }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         promoter.setStatus((byte)1);
         if(promoter.getCommissionMoney()==null)
             promoter.setCommissionMoney((double)0);
@@ -128,7 +136,7 @@ public class UserController {
         promoRepo.save(promoter);
         if(isRegis==true)
         referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
-        return promoter.getDoB().toString();
+        return dateOfBirth;
     }
     
 }
