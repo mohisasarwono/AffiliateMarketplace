@@ -5,6 +5,7 @@
  */
 package com.ThesisProject.controllers;
 
+import com.ThesisProject.configuration.HibernateProxyTypeAdapter;
 import com.ThesisProject.models.Promoter;
 import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.models.Store;
@@ -16,6 +17,12 @@ import com.ThesisProject.services.UserServices;
 import com.ThesisProject.wrappers.MessageWrapper;
 import com.ThesisProject.wrappers.UserWrapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,8 +75,27 @@ public class UserController {
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
         Promoter promoter = promoRepo.getOne(userWrapper.getId());
         try{
+            GsonBuilder gsonB = new GsonBuilder().registerTypeAdapter(Promoter.class, new JsonSerializer<Promoter>(){
+                @Override
+                public JsonElement serialize(Promoter promoter, Type type, JsonSerializationContext jsonSerializationContext) {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("id", promoter.getId());
+                    jsonObject.addProperty("name", promoter.getName());
+                    jsonObject.addProperty("address", promoter.getAddress());
+                    jsonObject.addProperty("phoneNumber", promoter.getPhoneNumber());
+                    jsonObject.addProperty("photoProfileUrl", promoter.getPhotoProfileUrl());
+                    jsonObject.addProperty("email", promoter.getEmail());
+                    jsonObject.addProperty("gender", promoter.getGender());
+                    jsonObject.addProperty("DoB", promoter.getDoB().toString());
+                    jsonObject.addProperty("status", promoter.getStatus());
+                    jsonObject.addProperty("commissionMoney", promoter.getCommissionMoney().doubleValue());
+                    return jsonObject;
+                }
+            });
+            gsonB.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+            Gson gson = gsonB.create();
             saveData(userWrapper,promoter,false);
-            messageWrapper = new MessageWrapper("Profile has been updated", new Gson().toJson(promoter), true);
+            messageWrapper = new MessageWrapper("Profile has been updated", gson.toJson(promoter), true);
         }catch(Exception e){
             e.printStackTrace();
             messageWrapper = new MessageWrapper("Please insert data correctly", "UPD-F", false);
