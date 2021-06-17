@@ -23,6 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +77,7 @@ public class UserController {
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
         Promoter promoter = promoRepo.getOne(userWrapper.getId());
         try{
+            saveData(userWrapper,promoter,false);
             GsonBuilder gsonB = new GsonBuilder().registerTypeAdapter(Promoter.class, new JsonSerializer<Promoter>(){
                 @Override
                 public JsonElement serialize(Promoter promoter, Type type, JsonSerializationContext jsonSerializationContext) {
@@ -94,7 +97,6 @@ public class UserController {
             });
             gsonB.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
             Gson gson = gsonB.create();
-            saveData(userWrapper,promoter,false);
             messageWrapper = new MessageWrapper("Profile has been updated", gson.toJson(promoter), true);
         }catch(Exception e){
             e.printStackTrace();
@@ -126,7 +128,7 @@ public class UserController {
         promoRepo.save(promoter);
         if(isRegis==true)
         referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
-        return "Promoter";
+        return promoter.getDoB().toString();
     }
     
 }
