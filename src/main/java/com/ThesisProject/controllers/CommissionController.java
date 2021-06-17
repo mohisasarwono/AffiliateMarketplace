@@ -114,14 +114,10 @@ public class CommissionController {
         commission.setTotalCommissionAmount(commission.getTotalCommissionAmount()+totalCommissionAmount);
         commission.setTotalTransaction(commission.getTotalTransaction()+commissionData.getCommissionDetails().size());
         commissionRepo.save(commission);
-        transMessage.setMessage("Transaction Successed");
-        transMessage.setCode("SUC");
-        transMessage.setStatus(true);
+        transMessage= new MessageWrapper("Transaction Successed","AC-T",true);
         }catch(Exception e){
             e.printStackTrace();
-            transMessage.setMessage("Transaction Failed");
-            transMessage.setCode("FL");
-            transMessage.setStatus(false);
+            transMessage= new MessageWrapper("Transaction Failed","AC-F",false);
         }
         return transMessage;
     }
@@ -174,17 +170,17 @@ public class CommissionController {
     }
     
     @RequestMapping(value="drawMoney",method = RequestMethod.GET)
-    public String drawMoney(@RequestParam(name = "promoterId",required = true)Long promoterId,@RequestParam(name = "balance",required = true)Double balance,@RequestParam(name="password",required = true)String password){
+    public MessageWrapper drawMoney(@RequestParam(name = "promoterId",required = true)Long promoterId,@RequestParam(name = "balance",required = true)Double balance,@RequestParam(name="password",required = true)String password){
         Promoter promoter = promoterRepo.findByIdAndPassword(promoterId, password);
         if(promoter!=null){
         if(promoter.getCommissionMoney()>balance){
             promoter.setCommissionMoney(promoter.getCommissionMoney()-balance);
             promoterRepo.save(promoter);
-            message="Success Draw Your Money";
+            transMessage= new MessageWrapper("Success Draw Your Money","DRWM-T",true);
         }else{
-            message="Error : Your input value is greater than your balance";
-        }}else{message="Error : Password isn't correct"; }
-        return message;
+            transMessage= new MessageWrapper("Error : Your input value is greater than your balance","DRWM-F",false);
+        }}else{transMessage= new MessageWrapper("Error : Password isn't correct","DRWM-F",false);}
+        return transMessage;
     }
     
 //    @RequestMapping(value="checkRecurring",method = RequestMethod.GET)
@@ -226,13 +222,9 @@ public class CommissionController {
            isTrue = itemCont.calculateQty(itemId, temp.getQty());
         }
         if(isTrue==true){
-        transMessage.setMessage("Transaction Successed");
-        transMessage.setCode("SUC");
-        transMessage.setStatus(true);}
-        else{
-        transMessage.setMessage("Transaction Failed");
-        transMessage.setCode("FL");
-        transMessage.setStatus(false);
+           transMessage= new MessageWrapper("Transaction Successed","CQ-T",true);
+        }else{
+           transMessage= new MessageWrapper("Transaction Failed","CQ-F",false);
         }
         return transMessage;
     }
