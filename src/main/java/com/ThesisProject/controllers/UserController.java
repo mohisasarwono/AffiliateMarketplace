@@ -15,6 +15,7 @@ import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.services.UserServices;
 import com.ThesisProject.wrappers.MessageWrapper;
 import com.ThesisProject.wrappers.UserWrapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,9 +66,10 @@ public class UserController {
     
     @RequestMapping(value = "update",method = RequestMethod.POST)
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
+        Promoter promoter = promoRepo.getOne(userWrapper.getId());
         try{
-            saveData(userWrapper,promoRepo.getOne(userWrapper.getId()),false);
-            messageWrapper = new MessageWrapper("Profile has been updated", "UPD-T", true);
+            saveData(userWrapper,promoter,false);
+            messageWrapper = new MessageWrapper("Profile has been updated", new Gson().toJson(promoter), true);
         }catch(Exception e){
             e.printStackTrace();
             messageWrapper = new MessageWrapper("Please insert data correctly", "UPD-F", false);
