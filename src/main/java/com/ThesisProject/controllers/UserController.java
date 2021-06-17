@@ -47,10 +47,10 @@ public class UserController {
     @RequestMapping(value = "register",method = RequestMethod.POST)
     public MessageWrapper register(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-                saveData(userWrapper);
+                saveData(userWrapper, true);
             messageWrapper = new MessageWrapper("Hello, "+userWrapper.getName()+" Welcome","LG-T", true);
         }else{
-            messageWrapper = new MessageWrapper("Email or Password isn't correct","LG-F", false);
+            messageWrapper = new MessageWrapper("Please insert data correctly","LG-F", false);
         }
         return messageWrapper;
     }
@@ -65,8 +65,8 @@ public class UserController {
     
     @RequestMapping(value = "update",method = RequestMethod.POST)
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
-        if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-            saveData(userWrapper);
+        if(userServices.emailChecker(userWrapper.getEmail())==0&&userServices.isEmailVaild(userWrapper.getEmail())){
+            saveData(userWrapper,false);
             messageWrapper = new MessageWrapper("Profile has been updated", "UPD-T", true);
         }else{
             messageWrapper = new MessageWrapper("Please insert data correctly", "UPD-F", false);
@@ -74,7 +74,7 @@ public class UserController {
         return messageWrapper;
     }
     
-    public String saveData(UserWrapper userWrapper){
+    public String saveData(UserWrapper userWrapper, boolean isRegis){
         Promoter promoter =new Promoter(); 
         if(userWrapper.getName()!=null)
             promoter.setName(userWrapper.getName());
@@ -96,6 +96,7 @@ public class UserController {
         if(userWrapper.getGender()!=null)
             promoter.setGender(userWrapper.getGender());
         promoRepo.save(promoter);
+        if(isRegis==true)
         referralCodeRepo.save(new ReferralCode(userServices.generateReferralCode(), (byte)1,promoter));
         return "Promoter";
     }
