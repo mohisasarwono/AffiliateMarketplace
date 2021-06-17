@@ -91,7 +91,7 @@ public class CommissionController {
             newCommissionDetail.setCommissionAmount(calculateCommissionAmount(thisCommDet.getPrice(),thisCommDet.getQty(),peripheral.getItem().getId(),peripheral.getId()));
             newCommissionDetail.setCommission(commission);
             newCommissionDetail.setCustomerId(commissionData.getCustomerId());
-            newCommissionDetail.setTransactionDate( new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"). parse(thisCommDet.getTransactionDate()));
+            newCommissionDetail.setTransactionDate( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"). parse(thisCommDet.getTransactionDate()));
             System.out.println(newCommissionDetail.getTransactionDate());
             if(recurringCounter>0&&nullFlag==true)
                  newCommissionDetail.setRecurringCounter(1);
