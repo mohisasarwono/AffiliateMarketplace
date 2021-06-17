@@ -47,7 +47,7 @@ public class UserController {
     @RequestMapping(value = "register",method = RequestMethod.POST)
     public MessageWrapper register(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
-                saveData(userWrapper, true);
+                saveData(userWrapper,new Promoter(),true);
             messageWrapper = new MessageWrapper("Hello, "+userWrapper.getName()+" Welcome","LG-T", true);
         }else{
             messageWrapper = new MessageWrapper("Please insert data correctly","LG-F", false);
@@ -65,17 +65,17 @@ public class UserController {
     
     @RequestMapping(value = "update",method = RequestMethod.POST)
     public MessageWrapper update(@RequestBody UserWrapper userWrapper){
-        if(userServices.emailChecker(userWrapper.getEmail())==0&&userServices.isEmailVaild(userWrapper.getEmail())){
-            saveData(userWrapper,false);
+        try{
+            saveData(userWrapper,promoRepo.getOne(userWrapper.getId()),false);
             messageWrapper = new MessageWrapper("Profile has been updated", "UPD-T", true);
-        }else{
+        }catch(Exception e){
+            e.printStackTrace();
             messageWrapper = new MessageWrapper("Please insert data correctly", "UPD-F", false);
         }
         return messageWrapper;
     }
     
-    public String saveData(UserWrapper userWrapper, boolean isRegis){
-        Promoter promoter =new Promoter(); 
+    public String saveData(UserWrapper userWrapper, Promoter promoter,boolean isRegis){
         if(userWrapper.getName()!=null)
             promoter.setName(userWrapper.getName());
         if(userWrapper.getAddress()!=null)
