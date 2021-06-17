@@ -18,7 +18,7 @@ import com.ThesisProject.repositories.PromoterRepositories;
 import com.ThesisProject.wrappers.CommissionDetailWrapper;
 import com.ThesisProject.wrappers.CommissionSummaryWrapper;
 import com.ThesisProject.wrappers.CommissionWrapper;
-import com.ThesisProject.wrappers.TranscMessageWrapper;
+import com.ThesisProject.wrappers.MessageWrapper;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,13 +55,13 @@ public class CommissionController {
     @Autowired
     PromoterRepositories promoterRepo;
     
-    TranscMessageWrapper transMessage;
+    MessageWrapper transMessage;
         
     String message;
     
     @RequestMapping(value="add",method = RequestMethod.POST)
-    public TranscMessageWrapper addCommission(@RequestBody CommissionWrapper commissionData){
-        transMessage = new TranscMessageWrapper();
+    public MessageWrapper addCommission(@RequestBody CommissionWrapper commissionData){
+        transMessage = new MessageWrapper();
         Double totalCommissionAmount = 0.0;
         boolean nullFlag = false;
         Peripheral peripheral=peripheralRepo.getByPeripheralLink(commissionData.getPeripheralLink());
@@ -217,10 +217,10 @@ public class CommissionController {
     }
     
     @RequestMapping(value="calculateQty", method=RequestMethod.POST)
-    public TranscMessageWrapper calculateQtyForTrans(@RequestBody CommissionWrapper commissionData){
+    public MessageWrapper calculateQtyForTrans(@RequestBody CommissionWrapper commissionData){
         String[] splitLink = commissionData.getPeripheralLink().split("/",5);
         Long itemId = Long.parseLong(splitLink[2]);
-        transMessage = new TranscMessageWrapper();
+        transMessage = new MessageWrapper();
         boolean isTrue = true;
         for(CommissionDetailWrapper temp : commissionData.getCommissionDetails()){
            isTrue = itemCont.calculateQty(itemId, temp.getQty());

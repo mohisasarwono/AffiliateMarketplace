@@ -11,6 +11,7 @@ import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.PeripheralRepositories;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
+import com.ThesisProject.wrappers.MessageWrapper;
 import com.ThesisProject.wrappers.PeripheralWrapper;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -38,11 +39,12 @@ public class PeripheralController {
     
     @Autowired
     ItemRepositories itemRepo;
-            
-    String message;
+    
+    MessageWrapper messageWrapper;
     
     @RequestMapping(value = "promote", method=RequestMethod.GET)
     public String promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name ="itemId",required = true)Long itemId){
+        String message = "Error Occured, Please Contact Our Customer Service";
         try{
         Peripheral thisPeripheral = peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
         if(thisPeripheral==null){
@@ -57,19 +59,23 @@ public class PeripheralController {
             thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item,(byte)1);
             thisPeripheral.setDuration(item.getExpiredDate());
             peripheralRepo.save(thisPeripheral);
-            message =thisPeripheral.getPeripheralLink();
+            message = thisPeripheral.getPeripheralLink();
         }else{
-            message =thisPeripheral.getPeripheralLink();
+            if(thisPeripheral.getStatus()==0){
+                thisPeripheral.setStatus((byte)1);
+                peripheralRepo.save(thisPeripheral);
+            }
+            message = thisPeripheral.getPeripheralLink();
         }    
         }catch(Exception e){
             e.printStackTrace();
-            message = "Error Occured, Please Contact Our Customer Service";
         }
         return message;
     }
     
     @RequestMapping(value = "counter", method=RequestMethod.GET)
     public String clickCounter(@RequestParam(name="peripheralLink")String peripheralLink){
+        String message;
         Peripheral thisPeripheral = peripheralRepo.getByPeripheralLink(peripheralLink);
         if(thisPeripheral!=null){
             thisPeripheral.setClickCounter(thisPeripheral.getClickCounter()+1);
@@ -114,16 +120,16 @@ public class PeripheralController {
     }
     
     @RequestMapping(value = "cancelPromote", method = RequestMethod.GET)
-    public String cancelPromote(@RequestParam(name="peripheralId",required = true)Long peripheralId){
+    public MessageWrapper cancelPromote(@RequestParam(name="peripheralId",required = true)Long peripheralId){
         try{
         Peripheral thisPeripheral = peripheralRepo.getOne(peripheralId);
         thisPeripheral.setStatus((byte)0);
         peripheralRepo.save(thisPeripheral);
-        message ="Cancel promote";
+        messageWrapper = new MessageWrapper("Successed to Cancel Promotion with peripheralLink :"+thisPeripheral.getPeripheralLink(),"CNL-PRM-T",true);
         }catch(Exception e){
             e.printStackTrace();
-            message = "Error Occured";
+            messageWrapper = new MessageWrapper("Failed to  Cancel Promotion","CNL-PRM-F",false);
         }
-        return message;
+        return messageWrapper;
     }
 }

@@ -9,14 +9,14 @@ package com.ThesisProject.wrappers;
  *
  * @author LENOVO
  */
-public class TranscMessageWrapper {
+public class MessageWrapper {
     private String message, code;
     private boolean status;
 
-    public TranscMessageWrapper() {
+    public MessageWrapper() {
     }
 
-    public TranscMessageWrapper(String message, String code, boolean status) {
+    public MessageWrapper(String message, String code, boolean status) {
         this.message = message;
         this.code = code;
         this.status = status;

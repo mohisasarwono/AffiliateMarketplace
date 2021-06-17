@@ -8,6 +8,7 @@ package com.ThesisProject.controllers;
 import com.ThesisProject.models.ReferralCode;
 import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.services.UserServices;
+import com.ThesisProject.wrappers.MessageWrapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,23 +28,24 @@ public class ReferralCodeController {
     
     @Autowired
     UserServices userServices;
-    private String message;
     private Byte BY_SYSTEM =1;
     private Byte BY_USER =2;
     
+    MessageWrapper messageWrapper;
+    
     @RequestMapping(value = "getGeneratedByUser", method = RequestMethod.GET)
-    public String generatedByUser(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId){
+    public MessageWrapper generatedByUser(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId){
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
            if(thisReferral.getReferralByUser()==referralCode){
-               message="Your inputted referral code is the same as your old referral code one";    
+               messageWrapper = new MessageWrapper("Your inputted referral code is the same as your old referral code one","GGBU-F",false);
            }else if(referralCodeRepo.checkReferralCode(referralCode).isEmpty()){
                thisReferral.setReferralByUser(referralCode);
                thisReferral.setStatus(BY_USER);
                referralCodeRepo.save(thisReferral);
-               message ="Success Updating Referral Code";
+              messageWrapper = new MessageWrapper("Successed Updating Referral Code","GGBU-T",true);
            }else{
-               message ="Referral Code has been used by other";}
-        return message;
+                 messageWrapper = new MessageWrapper("Referral Code Has Been Being Used by Other User","GGBU-F",false);}
+        return messageWrapper;
     }
     
     @RequestMapping(value = "getGeneratedBySystem", method = RequestMethod.GET)
@@ -66,17 +68,17 @@ public class ReferralCodeController {
     }
     
     @RequestMapping(value = "changeStatus", method=RequestMethod.GET)
-    public String changeStatus(@RequestParam(name="promoterId")Long promoterId, @RequestParam(name="status")Byte status){
+    public MessageWrapper changeStatus(@RequestParam(name="promoterId")Long promoterId, @RequestParam(name="status")Byte status){
         try{
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
         thisReferral.setStatus(status);
         referralCodeRepo.save(thisReferral);
-        message="Success Changing Your Referral Code";
+         messageWrapper = new MessageWrapper("Success Changing Your Referral Code","UPDRC-T", true);
         }catch(Exception e){
             e.printStackTrace();
-            message="Error : Something Went Wrong";
+            messageWrapper = new MessageWrapper("Error : Something Went Wrong","UPDRC-F",false);
         }
-        return message;
+        return messageWrapper;
     }
     
     @RequestMapping(value="getByPromoter", method = RequestMethod.GET)

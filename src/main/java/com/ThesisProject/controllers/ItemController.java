@@ -9,6 +9,7 @@ import com.ThesisProject.models.Item;
 import com.ThesisProject.repositories.ItemRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.wrappers.ItemWrapper;
+import com.ThesisProject.wrappers.MessageWrapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -37,9 +38,10 @@ public class ItemController {
     StoreRepositories storeRepo;
     
     String message;
+    MessageWrapper messageWrapper;
     
     @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
+    public MessageWrapper addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
             Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("YYYY-MM-DD HH:MM:SS").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
             if(itemWrapper.getDescription()!=null)
@@ -53,18 +55,17 @@ public class ItemController {
             if(itemWrapper.getPhotoURL()!=null)
                 item.setPhotoUrl(itemWrapper.getPhotoURL());
             itemRepo.save(item);
-            message="Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
-            return message;
+            messageWrapper = new MessageWrapper("Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName(),"AdIt-T",true);
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
-            message="Error Occured, Please Input Data Correctly";
-            return message;
+            messageWrapper=new MessageWrapper("Error Occured, Please Input Data Correctly","AdIt-F",false);
         }
+        return messageWrapper;
     
     }
     
     @RequestMapping(value="update", method = RequestMethod.POST)
-    public String updateItem(@RequestBody ItemWrapper itemWrapper){
+    public MessageWrapper updateItem(@RequestBody ItemWrapper itemWrapper){
     try{
         Item item = itemRepo.getOne(itemWrapper.getId());
         if(itemWrapper.getName()!=null)
@@ -84,20 +85,24 @@ public class ItemController {
         if(itemWrapper.getPhotoURL()!=null)
             item.setPhotoUrl(itemWrapper.getPhotoURL());
         itemRepo.save(item);
-        message="Success updating newItem, with itemId: "+item.getId()+" and itemName: "+item.getName();
-        return message;
+        messageWrapper = new MessageWrapper("Update adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName(),"UpIt-T",true);
     }catch(Exception e){
         e.printStackTrace();
-        message="Error Occured, Please Input Data Correctly";
-        return message;
+         messageWrapper=new MessageWrapper("Error Occured, Please Input Data Correctly","UpIt-F",false);
     }
+        return messageWrapper;
     }
     
     @RequestMapping(value = "delete", method=RequestMethod.GET,produces="application/json")
-    public void deleteItem(@RequestParam("itemId") Long id){
+    public MessageWrapper deleteItem(@RequestParam("itemId") Long id){
         Item thisItem = itemRepo.getOne(id);
-        thisItem.setStatus((byte)0);
-        itemRepo.save(thisItem);
+        if(thisItem!=null){ 
+            thisItem.setStatus((byte)0);
+            itemRepo.save(thisItem);
+            messageWrapper = new MessageWrapper("Successed Deleting Item with Id : "+id.toString(),"DlIt-T",true);
+        }else
+            messageWrapper = new MessageWrapper("Failed Deleting Item","DlIt-F",false);
+        return messageWrapper;
     }
     
     @RequestMapping(value = "getByStore", method=RequestMethod.GET,produces="application/json")

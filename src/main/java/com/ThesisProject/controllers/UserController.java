@@ -13,6 +13,7 @@ import com.ThesisProject.repositories.ReferralCodeRepositories;
 import com.ThesisProject.repositories.StoreRepositories;
 //import com.ThesisProject.repositories.UserRepositories;
 import com.ThesisProject.services.UserServices;
+import com.ThesisProject.wrappers.MessageWrapper;
 import com.ThesisProject.wrappers.UserWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,19 +42,17 @@ public class UserController {
     @Autowired
     UserServices userServices;
     
-    private String message;
+    MessageWrapper messageWrapper;
     
     @RequestMapping(value = "register",method = RequestMethod.POST)
-    public String register(@RequestBody UserWrapper userWrapper){
+    public MessageWrapper register(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
                 saveData(userWrapper);
-            System.out.println("Berhasil");
-            message="Hello, "+userWrapper.getName();
+            messageWrapper = new MessageWrapper("Hello, "+userWrapper.getName()+" Welcome","LG-T", true);
         }else{
-            System.out.println("Gagal");
-            message="Error";
+            messageWrapper = new MessageWrapper("Email or Password isn't correct","LG-F", false);
         }
-        return message;
+        return messageWrapper;
     }
     
     @RequestMapping(value = "login",method = RequestMethod.GET)
@@ -65,13 +64,14 @@ public class UserController {
     }
     
     @RequestMapping(value = "update",method = RequestMethod.POST)
-    public void update(@RequestBody UserWrapper userWrapper){
+    public MessageWrapper update(@RequestBody UserWrapper userWrapper){
         if(userServices.emailChecker(userWrapper.getEmail())==1&&userServices.isEmailVaild(userWrapper.getEmail())){
             saveData(userWrapper);
-            System.out.println("Berhasil");
+            messageWrapper = new MessageWrapper("Profile has been updated", "UPD-T", true);
         }else{
-            System.out.println("Gagal");
+            messageWrapper = new MessageWrapper("Please insert data correctly", "UPD-F", false);
         }
+        return messageWrapper;
     }
     
     public String saveData(UserWrapper userWrapper){
