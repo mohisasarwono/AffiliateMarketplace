@@ -5,6 +5,8 @@
  */
 package com.ThesisProject.configuration;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import springfox.documentation.spring.web.json.Json;
 
 /**
  *

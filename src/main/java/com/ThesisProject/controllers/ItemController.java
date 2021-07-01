@@ -43,7 +43,7 @@ public class ItemController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public MessageWrapper addItem(@RequestBody ItemWrapper itemWrapper) throws ParseException{
         try {
-            Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("YYYY-MM-DD HH:MM:SS").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
+            Item item = new Item(itemWrapper.getName(), itemWrapper.getPrice(), itemWrapper.getCommissionPriceOrPercentage(), (byte)1, itemWrapper.getCommissionStatus(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(itemWrapper.getExpiredDate()), storeRepo.getOne(itemWrapper.getStoreId()));
             if(itemWrapper.getDescription()!=null)
                 item.setDescription(itemWrapper.getDescription());
             if(itemWrapper.getQty()!=null)

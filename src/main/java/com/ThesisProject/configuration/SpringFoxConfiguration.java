@@ -5,6 +5,8 @@
 // */
 //package com.ThesisProject.configuration;
 //
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
 //import java.util.Collections;
 //import java.util.List;
 //import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@
 //import springfox.documentation.service.ApiInfo;
 //import springfox.documentation.service.ResponseMessage;
 //import springfox.documentation.spi.DocumentationType;
+//import springfox.documentation.spring.web.json.Json;
 //import springfox.documentation.spring.web.plugins.Docket;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
 //
@@ -30,20 +33,13 @@
 //@Configuration
 //@EnableSwagger2
 //public class SpringFoxConfiguration {
+//    @Bean
 //    public Docket api() { 
-//        List<ResponseMessage> list = new java.util.ArrayList<>();
-//        list.add(new ResponseMessageBuilder().code(500).message("500 message")
-//                .responseModel(new ModelRef("Result")).build());
-//        list.add(new ResponseMessageBuilder().code(401).message("Unauthorized")
-//                .responseModel(new ModelRef("Result")).build());
-//        list.add(new ResponseMessageBuilder().code(406).message("Not Acceptable")
-//                .responseModel(new ModelRef("Result")).build());
-//        
-//        
-//         return new Docket(DocumentationType.SWAGGER_2)  
+//        return new Docket(DocumentationType.SWAGGER_2)  
 //          .select()                                  
 //          .apis(RequestHandlerSelectors.any())              
 //          .paths(PathSelectors.any())                          
-//          .build();                                                  
+//          .build();                                           
 //    }
+//    
 //}

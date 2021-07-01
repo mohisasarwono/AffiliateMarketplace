@@ -21,7 +21,7 @@ public class ItemWrapper {
 
     public ItemWrapper() {
     }
-
+    
     public ItemWrapper(Long storeId, String name, String description, Double price, Double commissionPriceOrPercentage, Byte status, Byte commissionStatus, String expiredDate) {
         this.storeId = storeId;
         this.name = name;

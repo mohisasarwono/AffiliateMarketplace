@@ -6,6 +6,7 @@
 package com.ThesisProject.configuration;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
+import springfox.documentation.spring.web.json.Json;
 
 /**
  *
@@ -56,4 +58,6 @@ public class HibernateProxyTypeAdapter extends TypeAdapter<HibernateProxy> {
         // Serialize the value
         delegate.write(out, unproxiedValue);
     }
+    
+    
 }
