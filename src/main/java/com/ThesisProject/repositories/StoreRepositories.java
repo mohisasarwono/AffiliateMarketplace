@@ -44,6 +44,6 @@ public interface StoreRepositories extends JpaRepository<Store, Long> {
     "where c.total_transaction >= :totalTranscation and s.status = 1 order by i.id ", nativeQuery = true)
     List<Long> getItemByTotalTransaction(@Param("totalTranscation")Integer totalTransaction);
     
-     @Query(value="select id from mst_item where commission_price_or_percentage>:commissionRange and commission_status =:commissionStatus and status= 1 order by id ", nativeQuery = true)
+     @Query(value="select id from mst_item where commission_price_or_percentage>=:commissionRange and commission_status =:commissionStatus and status= 1 order by id ", nativeQuery = true)
     List<Long> getItemByCommissionRange (@Param("commissionRange")Double commissionRange, @Param("commissionStatus") Byte comStat);
 }
