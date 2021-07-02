@@ -107,7 +107,7 @@ public class UserController {
     }
     
     public String saveData(UserWrapper userWrapper, Promoter promoter,boolean isRegis){
-        String dateOfBirth = promoter.getDoB().toString();
+        String dateOfBirth = "Tanggal";
         if(userWrapper.getName()!=null)
             promoter.setName(userWrapper.getName());
         if(userWrapper.getAddress()!=null)

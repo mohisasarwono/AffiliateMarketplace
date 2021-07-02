@@ -31,7 +31,7 @@ public class ReferralCodeController {
     private Byte BY_SYSTEM =1;
     private Byte BY_USER =2;
     
-    MessageWrapper messageWrapper;
+    MessageWrapper messageWrapper = new MessageWrapper();
     
     @RequestMapping(value = "getGeneratedByUser", method = RequestMethod.GET)
     public MessageWrapper generatedByUser(@RequestParam(name = "referralCode", required = false)String referralCode,@RequestParam(name = "promoterId", required = true)Long promoterId){
@@ -49,15 +49,21 @@ public class ReferralCodeController {
     }
     
     @RequestMapping(value = "getGeneratedBySystem", method = RequestMethod.GET)
-    public String getGenerateBySystem(@RequestParam(name = "promoterId", required = true)Long promoterId){
+    public MessageWrapper getGenerateBySystem(@RequestParam(name = "promoterId", required = true)Long promoterId){
         ReferralCode thisReferral = referralCodeRepo.findByPromoter(promoterId);
         if(thisReferral!=null){
         String generatedBySystem =userServices.generateReferralCode();
         thisReferral.setReferralBySystem(generatedBySystem);
         thisReferral.setStatus(BY_SYSTEM);
         referralCodeRepo.save(thisReferral);
-        return generatedBySystem;}
-        return "Error Occured, Please Try Again";
+        messageWrapper.setMessage(generatedBySystem);
+        messageWrapper.setStatus(true);
+        messageWrapper.setCode("GRC-T");
+        return messageWrapper;}
+        messageWrapper.setMessage("Error Occured, Please Try Again");
+        messageWrapper.setStatus(false);
+        messageWrapper.setCode("GRC-F");
+        return messageWrapper;
     }
    
     @RequestMapping(value = "hide", method = RequestMethod.GET)

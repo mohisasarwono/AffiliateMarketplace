@@ -8,7 +8,10 @@ package com.ThesisProject.controllers;
 import com.ThesisProject.models.Store;
 import com.ThesisProject.repositories.StoreRepositories;
 import com.ThesisProject.wrappers.ItemWrapper;
+import com.ThesisProject.wrappers.StoreForGetWrapper;
 import com.ThesisProject.wrappers.StoreWrapper;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,6 +65,17 @@ public class StoreController {
        return storeRepo.getOne(id);
     }
     
+    
+    @RequestMapping(value ="getAllIdAndName", method = RequestMethod.GET)
+    public @ResponseBody List<StoreForGetWrapper> getAll(){
+        List<Store> stores = storeRepo.findAll();
+        List<StoreForGetWrapper> output = new ArrayList();
+        for(Store store :stores){
+            StoreForGetWrapper temp = new StoreForGetWrapper(store.getId(), store.getName());
+            output.add(temp);
+        }
+        return output;
+    }
     
     public String initData(StoreWrapper storeWrapper, Store store){
         try{

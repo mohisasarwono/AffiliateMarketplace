@@ -40,11 +40,10 @@ public class PeripheralController {
     @Autowired
     ItemRepositories itemRepo;
     
-    MessageWrapper messageWrapper;
+    MessageWrapper messageWrapper= new MessageWrapper();
     
     @RequestMapping(value = "promote", method=RequestMethod.GET)
-    public String promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name ="itemId",required = true)Long itemId){
-        String message = "Error Occured, Please Contact Our Customer Service";
+    public MessageWrapper promoteItem(@RequestParam(name = "promoterId", required = true)Long promoterId,@RequestParam(name ="itemId",required = true)Long itemId){
         try{
         Peripheral thisPeripheral = peripheralRepo.getByItemAndReferral(itemId, referralCodeRepo.findByPromoter(promoterId).getId());
         if(thisPeripheral==null){
@@ -59,32 +58,40 @@ public class PeripheralController {
             thisPeripheral = new Peripheral(peripheralLink, 0, referralCode , item,(byte)1);
             thisPeripheral.setDuration(item.getExpiredDate());
             peripheralRepo.save(thisPeripheral);
-            message = thisPeripheral.getPeripheralLink();
+            messageWrapper.setMessage(thisPeripheral.getPeripheralLink());
+            messageWrapper.setStatus(true);
+            messageWrapper.setCode("PR-T");
         }else{
             if(thisPeripheral.getStatus()==0){
                 thisPeripheral.setStatus((byte)1);
                 peripheralRepo.save(thisPeripheral);
             }
-            message = thisPeripheral.getPeripheralLink();
+            messageWrapper.setMessage(thisPeripheral.getPeripheralLink());
+            messageWrapper.setStatus(true);
+            messageWrapper.setCode("PR-T");
         }    
         }catch(Exception e){
+            messageWrapper.setMessage("Error Ocurred");
+            messageWrapper.setStatus(false);
+            messageWrapper.setCode("PR-F");
             e.printStackTrace();
         }
-        return message;
+        return messageWrapper;
     }
     
     @RequestMapping(value = "counter", method=RequestMethod.GET)
-    public String clickCounter(@RequestParam(name="peripheralLink")String peripheralLink){
+    public MessageWrapper clickCounter(@RequestParam(name="peripheralLink")String peripheralLink){
         String message;
         Peripheral thisPeripheral = peripheralRepo.getByPeripheralLink(peripheralLink);
         if(thisPeripheral!=null){
             thisPeripheral.setClickCounter(thisPeripheral.getClickCounter()+1);
             peripheralRepo.save(thisPeripheral);
             message="Update this counter with id : "+thisPeripheral.getId().toString();
+            return new MessageWrapper(message, "CC-T", true);
         }
         else
             message="Data's not found";
-        return message;
+        return new MessageWrapper(message, "CC-F", false);
     }
     
     @RequestMapping(value = "getAllByPromoter", method = RequestMethod.GET)
