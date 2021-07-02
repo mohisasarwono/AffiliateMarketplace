@@ -13,14 +13,14 @@ public class MarketPlaceForItemWrapper{
     private Long id,storeId;
     private String name,desc, imageUrl;
     protected Double commision,price;
-    private Integer totalTranscation, totalView;
+    private Integer totalTranscation, totalView,recurring;
     private String durationDate,type;
     private Byte commissionStat;
 
     public MarketPlaceForItemWrapper() {
     }
 
-    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat, Integer totalView, Double price, String type) {
+    public MarketPlaceForItemWrapper(Long id, String name, String desc, String imageUrl, Double commision, Integer totalTranscation, String durationDate, Long storeId, Byte commissionStat, Integer totalView, Double price, String type, Integer recurring) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -33,6 +33,7 @@ public class MarketPlaceForItemWrapper{
         this.totalView = totalView;
         this.price = price;
         this.type = type;
+        this.recurring=recurring;
     }
 
     public Double getCommision() {
@@ -130,5 +131,14 @@ public class MarketPlaceForItemWrapper{
     public void setTypeId(String typeId) {
         this.type = typeId;
     }
+
+    public Integer getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(Integer recurring) {
+        this.recurring = recurring;
+    }
+    
     
 }
