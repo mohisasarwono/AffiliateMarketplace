@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +41,8 @@ public class MarketplaceController {
     
     @RequestMapping(value="getAllDataItem", method=RequestMethod.GET)
     public List<MarketPlaceForItemWrapper> getAllDataItem(@RequestParam(name = "limitData", required = true )Long limitData){
-        List<Long> storeIds = storeRepo.getLimitDataForMarketplace(limitData);
-        return initDataItem(storeIds);
+        List<Long> itemIds = itemRepo.getLimitDataForMarketplace(limitData);
+        return initDataItem(itemIds);
     }
     
     @RequestMapping(value="getAllDataStore", method=RequestMethod.GET)

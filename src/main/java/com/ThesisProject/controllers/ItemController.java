@@ -57,6 +57,7 @@ public class ItemController {
             itemRepo.save(item);
             messageWrapper = new MessageWrapper("Success adding newItem, with itemId: "+item.getId()+" and itemName: "+item.getName(),"AdIt-T",true);
         } catch (NullPointerException e) {
+            e.printStackTrace();
             System.out.println(e.getMessage());
             messageWrapper=new MessageWrapper("Error Occured, Please Input Data Correctly","AdIt-F",false);
         }

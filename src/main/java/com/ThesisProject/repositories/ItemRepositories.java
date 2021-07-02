@@ -19,6 +19,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemRepositories extends JpaRepository<Item, Long> {
     
+    @Query(value="select id from mst_item limit :limitData",nativeQuery = true)
+    List<Long> getLimitDataForMarketplace(@Param("limitData") Long limitData);
+    
     @Query(value = "select * from mst_item where store_id = :storeId and status = 1 order by id",nativeQuery = true)
     List<Item> getByStoreAndStatus(@Param("storeId")Long storeId);
     
