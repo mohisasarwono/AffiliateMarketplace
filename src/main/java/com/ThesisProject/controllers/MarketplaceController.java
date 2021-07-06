@@ -79,7 +79,7 @@ public class MarketplaceController {
             param++;
         }
         
-        if(itemIds==null)
+        if(itemIds==null||param==0)
             return getAllDataItem((long)100);
         
         if(param>1){
@@ -96,6 +96,7 @@ public class MarketplaceController {
     
      public List<Long> findDuplicate(List<Long> thisItemIds, Integer param)
     {
+        System.out.println(param);
         return thisItemIds.stream().collect(
                         Collectors.groupingBy(
                                 Function.identity(),
