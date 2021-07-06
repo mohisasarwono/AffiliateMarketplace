@@ -74,7 +74,7 @@ public class MarketplaceController {
             itemIds.addAll(storeRepo.getItemByItemName(itemName));
             param++;
         }
-        if(commissionRange > 0.0 && !commissionStatus.toString().equals("0")){
+        if(commissionRange >= 0.0 && !commissionStatus.toString().equals("0")){
             itemIds.addAll(storeRepo.getItemByCommissionRange(commissionRange, commissionStatus));
             param++;
         }
