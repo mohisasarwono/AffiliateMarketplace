@@ -11,20 +11,21 @@ package com.ThesisProject.wrappers;
  */
 public class CommissionSummaryWrapper {
     private Long storeId;
-    private String storeOrPromoterName,peripheralLink;
+    private String storeOrPromoterName,peripheralLink,recurringCounter;
     private Integer clickCounter;
     private Double totalCommissionAmount, totalTransaction;
 
     public CommissionSummaryWrapper() {
     }
 
-    public CommissionSummaryWrapper(Long storeId, String storeOrPromoterName, Integer clickCounter, Double totalCommissionAmount, Double totalTransaction,String peripheralLink) {
+    public CommissionSummaryWrapper(Long storeId, String storeOrPromoterName, Integer clickCounter, Double totalCommissionAmount, Double totalTransaction,String peripheralLink, String recurringCounter) {
         this.storeId = storeId;
         this.storeOrPromoterName = storeOrPromoterName;
         this.clickCounter = clickCounter;
         this.totalCommissionAmount = totalCommissionAmount;
         this.totalTransaction = totalTransaction;
         this.peripheralLink=peripheralLink;
+        this.recurringCounter=recurringCounter;
     }
 
     public Long getStoreId() {
@@ -74,6 +75,12 @@ public class CommissionSummaryWrapper {
     public void setPeripheralLink(String peripheralLink) {
         this.peripheralLink = peripheralLink;
     }
-    
-    
+
+    public String getReccurringCounter() {
+        return recurringCounter;
+    }
+
+    public void setReccurringCounter(String recurringCounter) {
+        this.recurringCounter = recurringCounter;
+    }
 }

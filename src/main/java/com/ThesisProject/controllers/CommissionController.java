@@ -155,7 +155,7 @@ public class CommissionController {
                 thisDatas=commissionRepo.getDataSummaryForStore(storeId);
         }
         for(Object[] data:thisDatas){
-            thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString()),data[5].toString()));
+            thisOutput.add(new CommissionSummaryWrapper(Long.parseLong(data[0].toString()), data[1].toString(), Integer.parseInt(data[2].toString()), Double.parseDouble(data[3].toString()),Double.parseDouble(data[4].toString()),data[5].toString(),(data[6].toString()+'/'+data[7].toString())));
         }
         return thisOutput;
         }catch(Exception e){

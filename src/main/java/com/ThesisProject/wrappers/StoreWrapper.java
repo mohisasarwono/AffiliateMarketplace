@@ -16,7 +16,7 @@ public class StoreWrapper {
     private String name, address, phoneNumber, photoProfileUrl, email;
     private Byte status;
     private String storeDescription;
-    private Integer type;
+//    private Integer type;
     private List<ItemWrapper> items;
 
     public StoreWrapper() {
@@ -86,13 +86,13 @@ public class StoreWrapper {
         this.storeDescription = storeDescription;
     }
 
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
+//    public Integer getType() {
+//        return type;
+//    }
+//
+//    public void setType(Integer type) {
+//        this.type = type;
+//    }
 
     public List<ItemWrapper> getItems() {
         return items;
